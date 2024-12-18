@@ -4,7 +4,7 @@
     "commitMessage": "chore: release v${version}"
   },
   "hooks": {
-    "before:release": "bun lint"
+    "before:release": "bun check && bun test"
   },
   "github": {
     "release": true

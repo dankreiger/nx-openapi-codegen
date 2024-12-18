@@ -2,10 +2,17 @@
   "name": "nx-openapi-codegen",
   "type": "module",
   "module": "src/index.ts",
-  "bin": "src/index.js",
+  "bin": "src/index.ts",
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
   "scripts": {
     "check": "bunx biome check --write src/**/*.ts",
+    "commit": "cz",
     "test": "bun test",
+    "dev": "bun run src/index.ts",
     "test:coverage": "bun test --coverage",
     "test:watch": "bun test --watch",
     "release": "release-it"

@@ -8,6 +8,16 @@
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dankreiger/nx-openapi-codegen.git"
+  },
+  "homepage": "https://github.com/dankreiger/nx-openapi-codegen",
+  "bugs": {
+    "url": "https://github.com/dankreiger/nx-openapi-codegen/issues"
+  },
+  "author": "Dan Kreiger <dankreiger@gmail.com>",
+  "license": "MIT",
   "scripts": {
     "check": "bunx biome check --write src/**/*.ts",
     "commit": "cz",

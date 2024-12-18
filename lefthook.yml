@@ -1,0 +1,17 @@
+pre-commit:
+  parallel: true
+  commands:
+    check:
+      run: bun check
+      stage_fixed: true
+    test:
+      run: bun test
+commit-msg:
+  commands:
+    check-commits:
+      run: bunx commitlint --edit
+post-merge:
+  install-deps-postmerge:
+    tags: frontend
+    run: bunx install-deps-postmerge
+

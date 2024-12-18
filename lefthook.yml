@@ -2,7 +2,7 @@ pre-commit:
   parallel: true
   commands:
     check:
-      run: bun check
+      run: bunx sort-package-json && bun check
       stage_fixed: true
     test:
       run: bun test

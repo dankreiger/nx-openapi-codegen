@@ -23,3 +23,7 @@ To run:
 ```bash
 bun dev
 ```
+
+To release:
+
+Ensure you have a `.env.local` file with the `GITHUB_TOKEN` environment variable.

@@ -5,5 +5,8 @@
     "source.fixAll.biome": "always",
     "biome.lint.enabled": "always"
   },
-  "biome.enabled": true
+  "biome.enabled": true,
+  "[dotenv]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
+  }
 }

@@ -1,5 +1,12 @@
 
 
+## [0.0.4](https://github.com/dankreiger/nx-openapi-codegen/compare/v0.0.3...v0.0.4) (2024-12-19)
+
+
+### Bug Fixes
+
+* **bundler:** use tsup to bundle esm, cjs, and use tsc for type defs ([18509fa](https://github.com/dankreiger/nx-openapi-codegen/commit/18509fa2c11adfb5622f208d389f411c7c4b4170))
+
 ## [0.0.3](https://github.com/dankreiger/nx-openapi-codegen/compare/v0.0.2...v0.0.3) (2024-12-18)
 
 

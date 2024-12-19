@@ -1,1 +1,1 @@
-export { getSelectedPackages } from './get-selected-packages.prompts';
+export { getSelectedPackages } from "./get-selected-packages.prompts";

@@ -1,1 +1,1 @@
-export { BaseDirSchema } from './base-dir.schema';
+export * from "./base-dir.schemas";

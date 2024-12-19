@@ -1,1 +1,1 @@
-export { NpmScopeSchema } from './npm-scope.schema';
+export { NpmScopeSchema } from "./npm-scope.schemas";

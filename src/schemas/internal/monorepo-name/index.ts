@@ -1,1 +1,1 @@
-export { MonorepoNameSchema } from './monorepo-name.schema';
+export { MonorepoNameSchema } from "./monorepo-name.schemas";

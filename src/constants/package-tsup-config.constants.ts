@@ -1,4 +1,4 @@
-export const TSUP_CONFIG = `import { defineConfig } from 'tsup';
+export const PACKAGE_TSUP_CONFIG = `import { defineConfig } from 'tsup';
 export default defineConfig({
   entry: {
     '.': 'src/index.ts',

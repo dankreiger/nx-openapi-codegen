@@ -1,1 +1,1 @@
-export { getMonorepoName } from './get-monorepo-name.prompts';
+export * from "./get-monorepo-name.prompts";

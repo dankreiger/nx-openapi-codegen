@@ -2,7 +2,7 @@ import { $, write } from "bun";
 import { merge } from "lodash-es";
 import type { PackageJson } from "type-fest";
 
-export async function preparePackageJson(input: {
+export async function updatePackageJson(input: {
 	packageJsonOverride?: Partial<PackageJson>;
 	path?: string;
 }) {

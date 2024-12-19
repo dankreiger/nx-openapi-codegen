@@ -1,1 +1,1 @@
-export { getNpmOrgName } from './get-npm-org-name.prompts';
+export { getNpmOrgName } from "./get-npm-org-name.prompts";

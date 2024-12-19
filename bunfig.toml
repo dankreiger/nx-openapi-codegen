@@ -1,3 +1,6 @@
+[install]
+exact = true
+
 [test]
 # Load these modules before running tests.
 preload = ["./src/test-setup.ts"]

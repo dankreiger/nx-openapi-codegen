@@ -1,11 +1,11 @@
-import { input } from '@inquirer/prompts';
-import { MonorepoNameSchema } from '../../../schemas/internal/monorepo-name/monorepo-name.schema';
+import { input } from "@inquirer/prompts";
+import { MonorepoNameSchema } from "../../../schemas";
 
 export async function getMonorepoName() {
-  return MonorepoNameSchema.parse(
-    await input({
-      message: 'Enter the monorepo name:',
-      default: 'my-monorepo',
-    })
-  );
+	return MonorepoNameSchema.parse(
+		await input({
+			message: "Enter the monorepo name:",
+			default: "my-monorepo",
+		}),
+	);
 }

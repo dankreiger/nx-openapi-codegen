@@ -1,14 +1,18 @@
-import { mock } from "bun:test";
+import { mock, spyOn } from "bun:test";
 
-mock.module("bun", () => ({
-	write: mock(() => Promise.resolve()),
+mock.module("node:fs/promises", () => ({
+	chmod: mock(),
+	mkdir: mock(),
+	stat: mock(),
+	readFile: mock(),
+	rm: mock(),
 }));
 
 mock.module("@inquirer/prompts", () => ({
 	input: mock(() => Promise.resolve("packages")),
 }));
 
-mock.module("@nx/devkit", () => ({
-	getProjects: mock(() => Promise.resolve([])),
-}));
-
+spyOn(process, "chdir").mockImplementation(() => {});
+spyOn(Bun, "write").mockImplementation(() => Promise.resolve(1));
+spyOn(console, "log").mockImplementation(() => {});
+spyOn(console, "error").mockImplementation(() => {});

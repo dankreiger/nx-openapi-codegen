@@ -1,5 +1,5 @@
-import { input } from '@inquirer/prompts';
-import { BaseDirSchema } from '../../../schemas';
+import { input } from "@inquirer/prompts";
+import { BaseDirSchema } from "../../../schemas";
 
 /**
  * @returns The packages base directory
@@ -12,10 +12,10 @@ import { BaseDirSchema } from '../../../schemas';
  * @default packages
  */
 export async function getPackagesBaseDir() {
-  return BaseDirSchema.parse(
-    await input({
-      message: 'Enter the packages base directory:',
-      default: 'packages',
-    })
-  );
+	return BaseDirSchema.parse(
+		await input({
+			message: "Enter the packages base directory:",
+			default: "packages",
+		}),
+	);
 }

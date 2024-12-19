@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test";
-import { AvailablePackagesSchema } from "../available-packages/available-packages.schema";
+import { AvailablePackagesSchema } from "./available-packages.schemas";
 
 describe("AvailablePackagesSchema", () => {
 	it("should accept valid package names", () => {

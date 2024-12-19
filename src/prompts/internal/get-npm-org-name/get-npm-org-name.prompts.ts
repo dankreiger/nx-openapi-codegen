@@ -1,5 +1,5 @@
-import { input } from '@inquirer/prompts';
-import { NpmScopeSchema } from '../../../schemas';
+import { input } from "@inquirer/prompts";
+import { NpmScopeSchema } from "../../../schemas";
 
 /**
  * @returns The npm org name
@@ -7,10 +7,10 @@ import { NpmScopeSchema } from '../../../schemas';
  * @default @my-org
  */
 export async function getNpmOrgName() {
-  return NpmScopeSchema.parse(
-    await input({
-      message: 'Enter the product prefix:',
-      default: '@my-org',
-    })
-  );
+	return NpmScopeSchema.parse(
+		await input({
+			message: "Enter the product prefix:",
+			default: "@my-org",
+		}),
+	);
 }

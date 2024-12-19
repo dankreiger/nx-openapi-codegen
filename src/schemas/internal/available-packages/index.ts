@@ -1,1 +1,1 @@
-export * from "./available-packages.schema";
+export * from "./available-packages.schemas";

@@ -1,8 +1,11 @@
 import { $, write } from "bun";
-import { TSUP_CONFIG } from "../../../constants";
-import type { MonorepoConfig } from "../../../types";
+import chalk from "chalk";
+import { PACKAGE_TSUP_CONFIG } from "../../../constants";
+import type { MonorepoConfig } from "../../../schemas";
+import { getGithubRepoUrl } from "../get-github-repo-url";
+import { getPackageDescriptionByFolder } from "../get-package-description-by-folder";
 import { getTags } from "../get-tags";
-import { preparePackageJson } from "../prepare-package-json";
+import { updatePackageJson } from "../update-package-json";
 
 export async function createPackage(config: MonorepoConfig) {
 	const { npmOrgName, packagesBaseDir, selectedPackages, repoName } = config;
@@ -13,7 +16,9 @@ export async function createPackage(config: MonorepoConfig) {
 		const ORG_NAME = npmOrgName.replace("@", "");
 		const GITHUB_REPO_PATH = `https://github.com/${ORG_NAME}/${repoName}.git`;
 		console.log(
-			`\nGenerating library for: ${folder} with prefix: ${npmOrgName}\n`,
+			chalk.blue(
+				`\n⚡ Generating library for: ${chalk.bold.white(folder)} with prefix: ${chalk.bold.white(npmOrgName)}\n`,
+			),
 		);
 
 		await $`bunx nx generate @nx/js:library \
@@ -29,13 +34,13 @@ export async function createPackage(config: MonorepoConfig) {
 		await $`bun pm untrusted`;
 		await $`bunx nx g @gitopslovers/nx-biome:configuration --project ${PACKAGE_NAME}`;
 
-		await preparePackageJson({
+		await updatePackageJson({
 			packageJsonOverride: {
-				description: "Type definitions for the models and schemas.",
-				homepage: GITHUB_REPO_PATH,
+				description: getPackageDescriptionByFolder(folder),
+				homepage: getGithubRepoUrl(config),
 				repository: {
 					type: "git",
-					url: GITHUB_REPO_PATH,
+					url: getGithubRepoUrl(config),
 					directory: `${DIRECTORY}/${folder}`,
 				},
 				license: "MIT",
@@ -53,8 +58,11 @@ export async function createPackage(config: MonorepoConfig) {
 			path: `${DIRECTORY}/package.json`,
 		});
 
-		await write(`${DIRECTORY}/tsup.config.ts`, TSUP_CONFIG);
+		await write(`${DIRECTORY}/tsup.config.ts`, PACKAGE_TSUP_CONFIG);
 
-		console.log(`\nDone generating: ${folder}`);
+		console.log(
+			chalk.green(`\n✓ Done generating: ${chalk.bold.white(PACKAGE_NAME)}`),
+		);
+		console.log(`\t Details: ${getPackageDescriptionByFolder(folder)}`);
 	}
 }

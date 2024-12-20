@@ -5,9 +5,6 @@
 		"tagName": "v${version}",
 		"push": true
 	},
-	"hooks": {
-		"before:release": "bun check && bun test"
-	},
 	"github": {
 		"release": true
 	},

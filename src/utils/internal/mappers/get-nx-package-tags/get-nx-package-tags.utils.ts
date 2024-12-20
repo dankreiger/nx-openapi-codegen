@@ -1,6 +1,8 @@
 import type { Join } from "type-fest";
 
-export function getTags<const T extends ReadonlyArray<string>>(tags?: T) {
+export function getNxPackageTags<const T extends ReadonlyArray<string>>(
+	tags?: T,
+) {
 	return ["typescript", ...(tags ?? [])].join(",") as TypeScriptProjectTags<T>;
 }
 

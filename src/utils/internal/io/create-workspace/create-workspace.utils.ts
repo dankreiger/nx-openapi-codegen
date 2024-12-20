@@ -1,17 +1,19 @@
 import { $, write } from "bun";
 
-import type { MonorepoConfig, PackageScriptName } from "../../../schemas";
-import { createWorkspaceCommitConfig } from "../create-workspace-commit-config";
-import { createWorkspaceNpmrc } from "../create-workspace-npmrc";
-import { createWorkspaceScripts } from "../create-workspace-scripts";
-import { createWorkspaceVscodeConfig } from "../create-workspace-vscode-config";
-import { getGithubRepoUrl } from "../get-github-repo-url";
-import { updatePackageJson } from "../update-package-json";
+import { WORKSPACE_BIOME_CONFIG } from "../../../../constants";
+import type { MonorepoConfig, PackageScriptName } from "../../../../schemas";
+import { getGithubRepoUrl } from "../../mappers/get-github-repo-url";
+import { updatePackageJson } from "../../update-package-json";
+import { createWorkspaceCodegenConfig } from "./create-workspace-codegen-config";
+import { createWorkspaceCommitConfig } from "./create-workspace-commit-config";
+import { createWorkspaceNpmrc } from "./create-workspace-npmrc";
+import { createWorkspaceScripts } from "./create-workspace-scripts";
+import { createWorkspaceVscodeConfig } from "./create-workspace-vscode-config";
 
 export async function createWorkspace(config: MonorepoConfig) {
 	const { repoName } = config;
 
-	await $`bunx create-nx-workspace@latest ${repoName} \
+	await $`bunx create-nx-workspace@20.2.2 ${repoName} \
     --preset=ts \
     --formatter=none \
     --linter=none \
@@ -21,9 +23,7 @@ export async function createWorkspace(config: MonorepoConfig) {
     --useGitHub=true`;
 
 	process.chdir(repoName);
-
-	// Run the untrusted command to install the packages
-	await $`bun pm untrusted`;
+	await Bun.$`bunx nx reset`;
 
 	// Add @nx/js to the workspace
 	await $`bunx nx add @nx/js --save-exact`;
@@ -40,6 +40,15 @@ export async function createWorkspace(config: MonorepoConfig) {
 		"tsup",
 		"commitizen",
 		"cz-conventional-changelog",
+		"@faker-js/faker",
+		"msw",
+		"swr",
+		"zod",
+		"axios",
+		"@tanstack/react-query",
+		"@tanstack/solid-query",
+		"@tanstack/svelte-query",
+		"@tanstack/vue-query",
 	];
 	await $`bun add -D -E ${{ raw: DEV_DEPENDENCIES.join(" ") }}`;
 
@@ -84,16 +93,22 @@ export async function createWorkspace(config: MonorepoConfig) {
 	});
 
 	// Create workspace scripts
-	await createWorkspaceScripts();
+	await createWorkspaceScripts(config);
 
 	// Create commit config
 	await createWorkspaceCommitConfig();
+
+	// Create code generator config
+	await createWorkspaceCodegenConfig(config);
 
 	// Create npmrc
 	await createWorkspaceNpmrc(config);
 
 	// Create vscode config
 	await createWorkspaceVscodeConfig();
+
+	// Set biome config
+	await write("biome.json", JSON.stringify(WORKSPACE_BIOME_CONFIG, null, 2));
 
 	// Set bun version
 	await write(".bun-version", "1.1.39");

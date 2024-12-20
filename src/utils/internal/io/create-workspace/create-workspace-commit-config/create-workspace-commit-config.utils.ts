@@ -1,5 +1,5 @@
 import { write } from "bun";
-import { build, lint, sort } from "../../../schemas";
+import { build, lint, sort } from "../../../../../schemas";
 
 export async function createWorkspaceCommitConfig() {
 	await write(

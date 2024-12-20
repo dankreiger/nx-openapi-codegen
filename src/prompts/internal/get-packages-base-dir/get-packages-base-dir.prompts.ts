@@ -16,6 +16,12 @@ export async function getPackagesBaseDir() {
 		await input({
 			message: "Enter the packages base directory:",
 			default: "packages",
+			validate: (value) => {
+				if (value.trim() === "config") {
+					return "The config directory is reserved for the workspace configuration, please choose a different name";
+				}
+				return true;
+			},
 		}),
 	);
 }

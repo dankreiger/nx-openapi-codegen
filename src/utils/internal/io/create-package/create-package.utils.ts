@@ -1,11 +1,13 @@
 import { $, write } from "bun";
 import chalk from "chalk";
-import { PACKAGE_TSUP_CONFIG } from "../../../constants";
-import type { MonorepoConfig } from "../../../schemas";
-import { getGithubRepoUrl } from "../get-github-repo-url";
-import { getPackageDescriptionByFolder } from "../get-package-description-by-folder";
-import { getTags } from "../get-tags";
-import { updatePackageJson } from "../update-package-json";
+import { PACKAGE_TSUP_CONFIG } from "../../../../constants";
+import type { MonorepoConfig } from "../../../../schemas";
+import {
+	getGithubRepoUrl,
+	getNxPackageTags,
+	getPackageDescriptionByFolder,
+} from "../../mappers";
+import { updatePackageJson } from "../../update-package-json";
 
 export async function createPackage(config: MonorepoConfig) {
 	const { npmOrgName, packagesBaseDir, selectedPackages, repoName } = config;
@@ -13,8 +15,6 @@ export async function createPackage(config: MonorepoConfig) {
 	for (const folder of selectedPackages) {
 		const PACKAGE_NAME = `${npmOrgName}/${folder}` as const;
 		const DIRECTORY = `${packagesBaseDir}/${folder}`;
-		const ORG_NAME = npmOrgName.replace("@", "");
-		const GITHUB_REPO_PATH = `https://github.com/${ORG_NAME}/${repoName}.git`;
 		console.log(
 			chalk.blue(
 				`\n⚡ Generating library for: ${chalk.bold.white(folder)} with prefix: ${chalk.bold.white(npmOrgName)}\n`,
@@ -28,10 +28,9 @@ export async function createPackage(config: MonorepoConfig) {
       --publishable=true \
       --unitTestRunner=none \
       --linter=none \
-      --tags=${getTags([folder])} \
+      --tags=${getNxPackageTags([folder])} \
       --no-interactive`;
 
-		await $`bun pm untrusted`;
 		await $`bunx nx g @gitopslovers/nx-biome:configuration --project ${PACKAGE_NAME}`;
 
 		await updatePackageJson({
@@ -45,6 +44,7 @@ export async function createPackage(config: MonorepoConfig) {
 				},
 				license: "MIT",
 				sideEffects: false,
+				type: "module",
 				main: "./dist/index.js",
 				module: "./dist/index.mjs",
 				types: "./dist/index.d.ts",

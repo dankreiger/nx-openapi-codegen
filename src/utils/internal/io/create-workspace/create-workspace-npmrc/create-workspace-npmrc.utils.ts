@@ -1,5 +1,5 @@
 import { write } from "bun";
-import type { MonorepoConfig } from "../../../schemas";
+import type { MonorepoConfig } from "../../../../../schemas";
 
 export async function createWorkspaceNpmrc(config: MonorepoConfig) {
 	await write(

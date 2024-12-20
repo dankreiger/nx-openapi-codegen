@@ -5,9 +5,10 @@ import {
 	WORKSPACE_SCRIPTS_BASE_DIR as BASE_DIR,
 	SCRIPT_DIRECTORIES,
 	WORKSPACE_SCRIPT_FILES as SCRIPT_FILES,
-} from "../../../constants";
+} from "../../../../../constants";
+import type { MonorepoConfig } from "../../../../../schemas";
 
-export async function createWorkspaceScripts() {
+export async function createWorkspaceScripts(config: MonorepoConfig) {
 	// Define all script directories in alphabetical order
 
 	async function createFile(filepath: string, content: string) {
@@ -28,8 +29,8 @@ export async function createWorkspaceScripts() {
 
 	// Create all files
 	await Promise.all(
-		Object.entries(SCRIPT_FILES).map(([filepath, content]) =>
-			createFile(filepath, content),
+		Object.entries(SCRIPT_FILES).map(([filepath, getConfig]) =>
+			createFile(filepath, getConfig(config)),
 		),
 	);
 

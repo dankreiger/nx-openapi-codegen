@@ -13,6 +13,7 @@ const logSuccess = pipe(chalk.green, console.log);
 
 		await createWorkspace(config);
 		await createPackage(config);
+		await Bun.$`bun generate`;
 
 		logSuccess`\n✓ All selected libraries generated successfully!\n`;
 	} catch (err) {

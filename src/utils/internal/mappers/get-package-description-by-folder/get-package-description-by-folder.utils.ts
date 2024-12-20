@@ -1,4 +1,4 @@
-import type { AvailablePackages } from "../../../schemas";
+import type { AvailablePackages } from "../../../../schemas";
 
 export const getPackageDescriptionByFolder = (folder: AvailablePackages) => {
 	function assertUnreachable(x: never): never {

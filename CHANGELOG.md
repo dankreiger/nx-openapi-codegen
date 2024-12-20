@@ -1,5 +1,13 @@
 
 
+## [0.0.5](https://github.com/dankreiger/nx-openapi-codegen/compare/v0.0.4...v0.0.5) (2024-12-20)
+
+
+### Bug Fixes
+
+* group folders ([fd9b3c6](https://github.com/dankreiger/nx-openapi-codegen/commit/fd9b3c6427addc03581795c2e353ea9054eedfef))
+* improve utils ([40bda80](https://github.com/dankreiger/nx-openapi-codegen/commit/40bda80323f9bc2640e30d19348af11b48621011))
+
 ## [0.0.4](https://github.com/dankreiger/nx-openapi-codegen/compare/v0.0.3...v0.0.4) (2024-12-19)
 
 

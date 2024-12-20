@@ -1,5 +1,12 @@
 
 
+## [0.0.6](https://github.com/dankreiger/nx-openapi-codegen/compare/v0.0.5...v0.0.6) (2024-12-20)
+
+
+### Bug Fixes
+
+* add shebang to index file ([e03e7a2](https://github.com/dankreiger/nx-openapi-codegen/commit/e03e7a2064b470e281f5bfe68abc4075d3b242cc))
+
 ## [0.0.5](https://github.com/dankreiger/nx-openapi-codegen/compare/v0.0.4...v0.0.5) (2024-12-20)
 
 

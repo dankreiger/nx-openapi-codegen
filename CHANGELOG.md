@@ -1,5 +1,12 @@
 
 
+## [0.0.7](https://github.com/dankreiger/nx-openapi-codegen/compare/v0.0.6...v0.0.7) (2024-12-21)
+
+
+### Bug Fixes
+
+* add codegen ([3b49f00](https://github.com/dankreiger/nx-openapi-codegen/commit/3b49f00df6b726bda175a3bfc1403ff97d9ef37e))
+
 ## [0.0.6](https://github.com/dankreiger/nx-openapi-codegen/compare/v0.0.5...v0.0.6) (2024-12-20)
 
 

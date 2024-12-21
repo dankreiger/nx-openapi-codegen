@@ -1,1 +1,1 @@
-export * from "./get-github-repo-url.utils";
+export * from "./get-github-repo-url.utils.ts";

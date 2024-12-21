@@ -1,4 +1,4 @@
-import type { AvailablePackages } from "../../../../schemas";
+import type { AvailablePackages } from "../../../../schemas/index.ts";
 
 export const getPackageDescriptionByFolder = (folder: AvailablePackages) => {
 	function assertUnreachable(x: never): never {
@@ -23,18 +23,10 @@ export const getPackageDescriptionByFolder = (folder: AvailablePackages) => {
 				return `${COMMON_STR} Random mock service worker handlers.`;
 			case "oas":
 				return `${COMMON_STR} OpenAPI specification utilities and types.`;
-			case "redoc":
-				return `${COMMON_STR} ReDoc API documentation utilities.`;
 			case "swr":
 				return `${COMMON_STR} Type definitions and utilities for SWR.`;
 			case "tanstack-react-query":
 				return `${COMMON_STR} Type definitions and utilities for TanStack React Query.`;
-			case "tanstack-solid-query":
-				return `${COMMON_STR} Type definitions and utilities for TanStack Solid Query.`;
-			case "tanstack-svelte-query":
-				return `${COMMON_STR} Type definitions and utilities for TanStack Svelte Query.`;
-			case "tanstack-vue-query":
-				return `${COMMON_STR} Type definitions and utilities for TanStack Vue Query.`;
 			case "zod":
 				return `${COMMON_STR} Type definitions and utilities for Zod.`;
 			default:

@@ -1,18 +1,16 @@
-import { MonorepoConfigSchema } from "../schemas";
+import { MonorepoConfigSchema } from "../schemas/index.ts";
 import {
-	getMonorepoName,
-	getNpmOrgName,
-	getOpenapiPath,
-	getPackagesBaseDir,
-	getSelectedPackages,
-} from "./internal";
+	getGithubName,
+	getOpenapiUrl,
+	getPackagesBaseDirPath,
+} from "./internal/index.ts";
 
 export async function getMonorepoConfig() {
 	return MonorepoConfigSchema.parse({
-		repoName: await getMonorepoName(),
-		npmOrgName: await getNpmOrgName(),
-		openapiPath: await getOpenapiPath(),
-		packagesBaseDir: await getPackagesBaseDir(),
-		selectedPackages: await getSelectedPackages(),
+		githubOrgName: await getGithubName({ nameType: "org" }),
+		githubRepoName: await getGithubName({ nameType: "repo" }),
+		openapiUrl: await getOpenapiUrl(),
+		packagesBaseDirPath: await getPackagesBaseDirPath(),
+		// selectedPackages: await getSelectedPackages(),
 	} as const);
 }

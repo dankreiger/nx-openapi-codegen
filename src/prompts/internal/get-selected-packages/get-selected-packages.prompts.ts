@@ -1,5 +1,5 @@
 import { checkbox } from "@inquirer/prompts";
-import { AvailablePackagesSchema } from "../../../schemas";
+import { AvailablePackagesSchema } from "../../../schemas/index.ts";
 
 /**
  * @returns The selected packages

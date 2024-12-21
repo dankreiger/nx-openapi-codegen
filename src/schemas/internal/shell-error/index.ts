@@ -1,1 +1,1 @@
-export { ShellErrorOutputSchema } from "./shell-error.schemas";
+export { ShellErrorOutputSchema } from "./shell-error.schemas.ts";

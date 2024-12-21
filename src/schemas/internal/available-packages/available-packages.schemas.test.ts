@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test";
-import { AvailablePackagesSchema } from "./available-packages.schemas";
+import { AvailablePackagesSchema } from "./available-packages.schemas.ts";
 
 describe("AvailablePackagesSchema", () => {
 	it("should accept valid package names", () => {
@@ -11,12 +11,8 @@ describe("AvailablePackagesSchema", () => {
 			"msw-constant",
 			"msw-random",
 			"oas",
-			"redoc",
 			"swr",
 			"tanstack-react-query",
-			"tanstack-solid-query",
-			"tanstack-svelte-query",
-			"tanstack-vue-query",
 			"types",
 			"zod",
 		];

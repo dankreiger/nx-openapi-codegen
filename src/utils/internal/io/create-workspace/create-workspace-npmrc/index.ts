@@ -1,1 +1,1 @@
-export * from "./create-workspace-npmrc.utils";
+export * from "./create-workspace-npmrc.utils.ts";

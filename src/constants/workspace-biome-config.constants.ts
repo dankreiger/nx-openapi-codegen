@@ -1,33 +1,78 @@
 export const WORKSPACE_BIOME_CONFIG = {
 	$schema: "https://biomejs.dev/schemas/1.9.4/schema.json",
-	vcs: {
-		enabled: false,
-		clientKind: "git",
-		useIgnoreFile: false,
+	organizeImports: {
+		enabled: true,
 	},
 	files: {
 		ignoreUnknown: false,
-		ignore: [],
+		ignore: [
+			"package.json",
+			"__snapshots__",
+			"e2e/schemas",
+			"coverage",
+			"assets",
+			"public",
+			"dist",
+			"artifacts",
+			".next",
+			".github",
+			".codesandbox",
+			".devcontainer",
+		],
 	},
 	formatter: {
 		enabled: true,
-		indentStyle: "tab",
-	},
-	organizeImports: {
-		enabled: true,
+		indentStyle: "space",
+		indentWidth: 2,
+		lineWidth: 160,
+		lineEnding: "lf",
 	},
 	linter: {
 		enabled: true,
 		rules: {
-			recommended: true,
+			suspicious: {
+				noExplicitAny: "off",
+				noArrayIndexKey: "warn",
+				noShadowRestrictedNames: "off",
+				noConfusingVoidType: "off",
+			},
+			complexity: {
+				noForEach: "off",
+				noBannedTypes: "off",
+				useArrowFunction: "off",
+				useLiteralKeys: "off",
+			},
+			style: {
+				noNonNullAssertion: "off",
+				noParameterAssign: "off",
+			},
 			correctness: {
-				noUnusedImports: "error",
+				noEmptyPattern: "off",
+				noConstructorReturn: "off",
+				noUnsafeOptionalChaining: "off",
+				useImportExtensions: "error",
+			},
+			performance: {
+				noAccumulatingSpread: "off",
 			},
 		},
 	},
 	javascript: {
 		formatter: {
-			quoteStyle: "double",
+			enabled: true,
+			trailingCommas: "all",
+			semicolons: "asNeeded",
+			quoteStyle: "single",
+			jsxQuoteStyle: "double",
+			bracketSameLine: false,
 		},
 	},
-} as const;
+	json: {
+		formatter: {
+			enabled: true,
+		},
+		parser: {
+			allowComments: true,
+		},
+	},
+};

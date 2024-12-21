@@ -8,12 +8,8 @@ export const AvailablePackagesSchema = z.enum([
 	"msw-constant",
 	"msw-random",
 	"oas",
-	"redoc",
 	"swr",
 	"tanstack-react-query",
-	"tanstack-solid-query",
-	"tanstack-svelte-query",
-	"tanstack-vue-query",
 	"types",
 	"zod",
 ]);

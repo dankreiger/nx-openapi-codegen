@@ -1,3 +1,3 @@
 #!/usr/bin/env bun
 
-export * from "./main";
+export * from "./main.ts";

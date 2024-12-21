@@ -7,7 +7,7 @@
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"ignore": []
+		"ignore": ["dist", "node_modules", ".nx", ".git", ".github", ".vscode"]
 	},
 	"formatter": {
 		"enabled": true,
@@ -19,7 +19,10 @@
 	"linter": {
 		"enabled": true,
 		"rules": {
-			"recommended": true
+			"recommended": true,
+			"correctness": {
+				"useImportExtensions": "error"
+			}
 		}
 	},
 	"json": {

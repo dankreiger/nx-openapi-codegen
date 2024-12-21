@@ -1,7 +1,14 @@
 import { write } from "bun";
-import { build, lint, sort } from "../../../../../schemas";
+import { build, lint, sort } from "../../../../../schemas/index.ts";
 
 export async function createWorkspaceCommitConfig() {
+	await write(
+		".commitlintrc",
+		`{
+		extends: ["@commitlint/config-conventional"],
+	}`,
+	);
+
 	await write(
 		"./lefthook.yml",
 		`

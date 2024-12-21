@@ -1,1 +1,1 @@
-export * from "./create-workspace-scripts.utils";
+export * from "./create-workspace-scripts.utils.ts";

@@ -1,25 +1,29 @@
 import { z } from "zod";
-import { AvailablePackagesSchema } from "../available-packages";
 
 export const MonorepoConfigSchema = z
 	.object({
-		repoName: z.string(),
-		npmOrgName: z
+		githubRepoName: z.string().trim(),
+		githubOrgName: z.string().trim(),
+		openapiUrl: z
 			.string()
-			.refine((r) => r.startsWith("@")) as z.ZodType<`@${string}`>,
-		openapiPath: z
-			.string()
+			.url()
+			.trim()
 			.default("https://petstore3.swagger.io/api/v3/openapi.json"),
-		packagesBaseDir: z.string(),
-		selectedPackages: z.array(AvailablePackagesSchema).readonly(),
+		packagesBaseDirPath: z.string().trim(),
+		// selectedPackages: z.array(AvailablePackagesSchema).readonly(),
 	})
 	.transform((res) => {
-		const [_, ...segments] = res.packagesBaseDir.split("/");
+		const [_, ...segments] = res.packagesBaseDirPath.split("/");
 		return {
 			...res,
-			kubbConfigDir: `./config/${segments.filter(Boolean).join("/")}`,
+			codegenConfigDir: `./config/${segments.filter(Boolean).join("/")}`,
+			npmOrgScope: `@${res.githubOrgName}` as const,
 		};
 	})
 	.readonly();
 
 export type MonorepoConfig = z.infer<typeof MonorepoConfigSchema>;
+export type MonorepoConfigInput = Omit<
+	MonorepoConfig,
+	"codegenConfigDir" | "npmOrgScope"
+>;

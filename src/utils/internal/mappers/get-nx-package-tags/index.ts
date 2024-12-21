@@ -1,1 +1,1 @@
-export * from "./get-nx-package-tags.utils";
+export * from "./get-nx-package-tags.utils.ts";

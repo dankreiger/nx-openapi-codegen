@@ -1,1 +1,1 @@
-export * from "./package-script-name.schemas";
+export * from "./package-script-name.schemas.ts";

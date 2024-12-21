@@ -1,1 +1,1 @@
-export * from "./available-packages.schemas";
+export * from "./available-packages.schemas.ts";

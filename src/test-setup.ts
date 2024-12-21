@@ -8,10 +8,6 @@ mock.module("node:fs/promises", () => ({
 	rm: mock(),
 }));
 
-mock.module("@inquirer/prompts", () => ({
-	input: mock(() => Promise.resolve("packages")),
-}));
-
 spyOn(process, "chdir").mockImplementation(() => {});
 spyOn(Bun, "write").mockImplementation(() => Promise.resolve(1));
 spyOn(console, "log").mockImplementation(() => {});

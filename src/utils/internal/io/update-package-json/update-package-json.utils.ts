@@ -3,7 +3,12 @@ import { merge } from "lodash-es";
 import type { PackageJson } from "type-fest";
 
 export async function updatePackageJson(input: {
-	packageJsonOverride?: Partial<PackageJson>;
+	packageJsonOverride?: Partial<PackageJson.PackageJsonStandard> & {
+		sideEffects?: boolean;
+		module?: string;
+		types?: string;
+		overrides?: Record<string, string>;
+	};
 	path?: string;
 }) {
 	const { packageJsonOverride, path = `${process.cwd()}/package.json` } = input;

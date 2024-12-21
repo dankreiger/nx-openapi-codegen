@@ -1,1 +1,1 @@
-export * from "./monorepo-config.schemas";
+export * from "./monorepo-config.schemas.ts";

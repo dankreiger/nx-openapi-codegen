@@ -5,8 +5,8 @@ import {
 	WORKSPACE_SCRIPTS_BASE_DIR as BASE_DIR,
 	SCRIPT_DIRECTORIES,
 	WORKSPACE_SCRIPT_FILES as SCRIPT_FILES,
-} from "../../../../../constants";
-import type { MonorepoConfig } from "../../../../../schemas";
+} from "../../../../../constants/index.ts";
+import type { MonorepoConfig } from "../../../../../schemas/index.ts";
 
 export async function createWorkspaceScripts(config: MonorepoConfig) {
 	// Define all script directories in alphabetical order

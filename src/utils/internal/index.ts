@@ -1,2 +1,2 @@
-export * from "./io";
-export * from "./mappers";
+export * from "./io/index.ts";
+export * from "./mappers/index.ts";

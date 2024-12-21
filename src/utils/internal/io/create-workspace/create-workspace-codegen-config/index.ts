@@ -1,1 +1,1 @@
-export * from "./create-workspace-codegen-config.utils";
+export * from "./create-workspace-codegen-config.utils.ts";

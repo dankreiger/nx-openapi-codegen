@@ -1,9 +1,9 @@
 import { write } from "bun";
-import type { MonorepoConfig } from "../../../../../schemas";
+import type { MonorepoConfig } from "../../../../../schemas/index.ts";
 
 export async function createWorkspaceNpmrc(config: MonorepoConfig) {
 	await write(
 		".npmrc",
-		`@${config.npmOrgName}:registry=https://npm.pkg.github.com`,
+		`@${config.githubOrgName}:registry=https://npm.pkg.github.com`,
 	);
 }

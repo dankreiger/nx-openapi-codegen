@@ -1,5 +1,5 @@
-import type { MonorepoConfig } from "../../../../schemas";
+import type { MonorepoConfig } from "../../../../schemas/index.ts";
 
 export function getGithubRepoUrl(config: MonorepoConfig) {
-	return `https://github.com/${config.npmOrgName}/${config.repoName}.git` as const;
+	return `https://github.com/${config.githubOrgName}/${config.githubRepoName}.git` as const;
 }

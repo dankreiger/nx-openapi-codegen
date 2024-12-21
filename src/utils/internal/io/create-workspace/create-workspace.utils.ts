@@ -1,19 +1,25 @@
 import { $, write } from "bun";
 
-import { WORKSPACE_BIOME_CONFIG } from "../../../../constants";
-import type { MonorepoConfig, PackageScriptName } from "../../../../schemas";
-import { getGithubRepoUrl } from "../../mappers/get-github-repo-url";
-import { updatePackageJson } from "../../update-package-json";
-import { createWorkspaceCodegenConfig } from "./create-workspace-codegen-config";
-import { createWorkspaceCommitConfig } from "./create-workspace-commit-config";
-import { createWorkspaceNpmrc } from "./create-workspace-npmrc";
-import { createWorkspaceScripts } from "./create-workspace-scripts";
-import { createWorkspaceVscodeConfig } from "./create-workspace-vscode-config";
+import {
+	DEPENDENCIES,
+	WORKSPACE_BIOME_CONFIG,
+} from "../../../../constants/index.ts";
+import type {
+	MonorepoConfig,
+	PackageScriptName,
+} from "../../../../schemas/index.ts";
+import { getGithubRepoUrl } from "../../mappers/get-github-repo-url/index.ts";
+import { updatePackageJson } from "../update-package-json/index.ts";
+import { createWorkspaceCodegenConfig } from "./create-workspace-codegen-config/index.ts";
+import { createWorkspaceCommitConfig } from "./create-workspace-commit-config/index.ts";
+import { createWorkspaceNpmrc } from "./create-workspace-npmrc/index.ts";
+import { createWorkspaceScripts } from "./create-workspace-scripts/index.ts";
+import { createWorkspaceVscodeConfig } from "./create-workspace-vscode-config/index.ts";
 
 export async function createWorkspace(config: MonorepoConfig) {
-	const { repoName } = config;
+	const { githubRepoName } = config;
 
-	await $`bunx create-nx-workspace@20.2.2 ${repoName} \
+	await $`bunx create-nx-workspace@20.2.2 ${githubRepoName} \
     --preset=ts \
     --formatter=none \
     --linter=none \
@@ -22,42 +28,12 @@ export async function createWorkspace(config: MonorepoConfig) {
     --pm=bun \
     --useGitHub=true`;
 
-	process.chdir(repoName);
+	process.chdir(githubRepoName);
 	await Bun.$`bunx nx reset`;
-
-	// Add @nx/js to the workspace
-	await $`bunx nx add @nx/js --save-exact`;
-
-	// Install dev dependencies
-	const DEV_DEPENDENCIES = [
-		"@gitopslovers/nx-biome",
-		"@nx/devkit",
-		"@commitlint/cli",
-		"@commitlint/config-conventional",
-		"@commitlint/prompt-cli",
-		"lefthook",
-		"tslib",
-		"tsup",
-		"commitizen",
-		"cz-conventional-changelog",
-		"@faker-js/faker",
-		"msw",
-		"swr",
-		"zod",
-		"axios",
-		"@tanstack/react-query",
-		"@tanstack/solid-query",
-		"@tanstack/svelte-query",
-		"@tanstack/vue-query",
-	];
-	await $`bun add -D -E ${{ raw: DEV_DEPENDENCIES.join(" ") }}`;
 
 	// Prepare root package.json
 	await updatePackageJson({
 		packageJsonOverride: {
-			commitlint: {
-				extends: ["@commitlint/config-conventional"],
-			},
 			config: {
 				commitizen: {
 					path: "./node_modules/cz-conventional-changelog",
@@ -65,11 +41,16 @@ export async function createWorkspace(config: MonorepoConfig) {
 			},
 			homepage: getGithubRepoUrl(config),
 			publishConfig: {
-				[`${config.npmOrgName}:registry`]: "https://npm.pkg.github.com",
+				[`${config.githubOrgName}:registry`]: "https://npm.pkg.github.com",
 			},
 			repository: {
 				type: "git",
 				url: getGithubRepoUrl(config),
+			},
+			overrides: {
+				esbuild: "0.24.0",
+				react: "18.3.1",
+				"react-dom": "18.3.1",
 			},
 			scripts: {
 				build: "bun ./tools/scripts/build/index.ts",
@@ -89,6 +70,7 @@ export async function createWorkspace(config: MonorepoConfig) {
 				release: "bun ./tools/scripts/release/index.ts",
 				"release:dry-run": "bun ./tools/scripts/release/dry-run.ts",
 			} satisfies Readonly<Record<PackageScriptName, string>>,
+			devDependencies: DEPENDENCIES,
 		},
 	});
 
@@ -112,4 +94,12 @@ export async function createWorkspace(config: MonorepoConfig) {
 
 	// Set bun version
 	await write(".bun-version", "1.1.39");
+
+	// Set NX env vars
+	await write(
+		".env",
+		`NX_SKIP_NX_CACHE=true
+NX_VERBOSE_LOGGING=true
+`,
+	);
 }

@@ -1,1 +1,1 @@
-export * from "./get-openapi-path.prompts";
+export * from "./get-openapi-path.prompts.ts";

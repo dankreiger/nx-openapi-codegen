@@ -16,7 +16,7 @@ export const MonorepoConfigSchema = z
 	})
 	.transform((res) => {
 		if (res.githubRepoName === getGithubNameByType({ nameType: "repo" })) {
-			execSync(`rimraf ./${res.githubRepoName}`);
+			execSync(`npx rimraf ./${res.githubRepoName}`);
 		}
 		return {
 			...res,

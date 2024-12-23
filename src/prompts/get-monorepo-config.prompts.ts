@@ -9,7 +9,7 @@ import {
 
 export async function getMonorepoConfig() {
 	if (Bun.env.RUN_MODE === "quick") {
-		execSync(`rimraf ./${getGithubNameByType({ nameType: "repo" })}`);
+		execSync(`npx rimraf ./${getGithubNameByType({ nameType: "repo" })}`);
 	}
 
 	const res = MonorepoConfigSchema.parse({

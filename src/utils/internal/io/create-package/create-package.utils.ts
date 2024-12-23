@@ -29,7 +29,7 @@ export async function createPackage(config: MonorepoConfig) {
 			),
 		);
 
-		await $`bunx nx add @nx/js`;
+		await $`bunx nx reset && bunx nx add @nx/js`;
 
 		await $`bunx nx generate @nx/js:library \
       --directory=${DIRECTORY} \

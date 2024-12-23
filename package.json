@@ -1,6 +1,6 @@
 {
 	"name": "nx-openapi-codegen",
-	"version": "0.0.7",
+	"version": "0.0.8",
 	"homepage": "https://github.com/dankreiger/nx-openapi-codegen",
 	"bugs": {
 		"url": "https://github.com/dankreiger/nx-openapi-codegen/issues"
@@ -14,7 +14,9 @@
 	"type": "module",
 	"module": "src/index.ts",
 	"bin": "src/index.ts",
-	"files": ["src"],
+	"files": [
+		"src"
+	],
 	"scripts": {
 		"check": "bunx biome check",
 		"check:fix": "bunx biome check --write",

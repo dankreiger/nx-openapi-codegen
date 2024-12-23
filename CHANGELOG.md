@@ -1,5 +1,12 @@
 
 
+## [0.0.8](https://github.com/dankreiger/nx-openapi-codegen/compare/v0.0.7...v0.0.8) (2024-12-23)
+
+
+### Bug Fixes
+
+* exclude non-buildables ([b94963b](https://github.com/dankreiger/nx-openapi-codegen/commit/b94963bd9a1962e7211fb2d7c56aede06c90289d))
+
 ## [0.0.7](https://github.com/dankreiger/nx-openapi-codegen/compare/v0.0.6...v0.0.7) (2024-12-21)
 
 

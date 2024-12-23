@@ -1,4 +1,6 @@
 import { input } from "@inquirer/prompts";
+import { CONFIG_DIRECTORY_NAME } from "../../../constants/config-directory-name.constants.ts";
+import { getNormalizedPath } from "../../../utils/index.ts";
 
 /**
  * @returns The packages base directory
@@ -11,16 +13,17 @@ import { input } from "@inquirer/prompts";
  * @default packages
  */
 export async function getPackagesBaseDirPath() {
+	if (Bun.env.RUN_MODE === "quick") return "packages";
 	const config: Parameters<typeof input>[0] = {
 		message: "Enter the packages base directory",
 		default: "packages",
 		required: true,
 		validate: (value) => {
-			if (value === "config") {
-				return "The config directory is reserved for the workspace configuration, please choose a different name";
-			}
 			if (value.includes(" ")) {
 				return "The packages base directory cannot contain spaces";
+			}
+			if (value === CONFIG_DIRECTORY_NAME) {
+				return `The "${CONFIG_DIRECTORY_NAME}" directory is reserved for the workspace configuration, please choose a different name`;
 			}
 			return true;
 		},
@@ -33,11 +36,5 @@ export async function getPackagesBaseDirPath() {
 		};
 	}
 
-	return normalizePackagesBaseDir(await input(config));
+	return getNormalizedPath({ path: await input(config) });
 }
-
-const removeTrailingSlash = (value: string) => value.replace(/\/$/, "");
-const replaceMultipleSlashes = (value: string) => value.replace(/\/\/+/, "/");
-
-const normalizePackagesBaseDir = (value: string) =>
-	removeTrailingSlash(replaceMultipleSlashes(value));

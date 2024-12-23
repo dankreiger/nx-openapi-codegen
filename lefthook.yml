@@ -5,7 +5,9 @@ pre-commit:
       run: bunx sort-package-json && bun check:fix
       stage_fixed: true
     test:
-      run: bun test
+      run: bun run test
+    typecheck:
+      run: bun run typecheck
 commit-msg:
   commands:
     check-commits:

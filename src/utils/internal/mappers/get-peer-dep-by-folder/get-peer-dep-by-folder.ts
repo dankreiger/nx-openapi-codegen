@@ -41,12 +41,18 @@ export const getPeerDepByFolder = (
 			};
 		case "oas":
 			return {};
+		case "rtk-query":
+			return {
+				"@reduxjs/toolkit": DEPENDENCIES["@reduxjs/toolkit"],
+				"react-redux": DEPENDENCIES["react-redux"],
+			};
 		case "swr":
 			return {
 				swr: DEPENDENCIES.swr,
 			};
 		case "types":
 			return {};
+
 		case "zod":
 			return {
 				zod: DEPENDENCIES.zod,

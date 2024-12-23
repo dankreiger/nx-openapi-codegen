@@ -1,4 +1,3 @@
-import { $, write } from "bun";
 import { merge } from "lodash-es";
 import type { PackageJson } from "type-fest";
 
@@ -9,17 +8,23 @@ export async function updatePackageJson(input: {
 		types?: string;
 		overrides?: Record<string, string>;
 	};
-	path?: string;
+	packageJsonPath?: string;
 }) {
-	const { packageJsonOverride, path = `${process.cwd()}/package.json` } = input;
-	const file = Bun.file(path);
+	const {
+		packageJsonOverride,
+		packageJsonPath = `${process.cwd()}/package.json`,
+	} = input;
+	const file = Bun.file(packageJsonPath);
 
 	const contents = await file.json();
 
-	await write(
-		path,
+	await Bun.write(
+		packageJsonPath,
 		JSON.stringify(merge(contents, packageJsonOverride), null, 2),
 	);
 
-	await $`bunx sort-package-json ${path}`;
+	await Bun.spawnSync(["bunx", "sort-package-json", packageJsonPath], {
+		stdout: "inherit",
+	});
+	await Bun.spawnSync(["bun", "install"], { stdout: "inherit" });
 }

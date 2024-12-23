@@ -17,25 +17,25 @@ export const WORKSPACE_SCRIPT_FILES = {
 	[`./${BASE_DIR}/boom/index.ts`]: (_: MonorepoConfig) =>
 		/* ts */ `${"#!/usr/bin/env bun"}
 console.log("Finding and removing all node_modules and dist directories...");
-await Bun.spawn(["find", ".", "-name", "node_modules", "-type", "d", "-prune", "-print", "-exec", "rm", "-rf", "{}", "+"], { stdout: "inherit" });
-await Bun.spawn(["find", ".", "-name", "dist", "-type", "d", "-prune", "-print", "-exec", "rm", "-rf", "{}", "+"], { stdout: "inherit" });
+Bun.spawnSync(["find", ".", "-name", "node_modules", "-type", "d", "-prune", "-print", "-exec", "rm", "-rf", "{}", "+"], { stdout: "inherit" });
+Bun.spawnSync(["find", ".", "-name", "dist", "-type", "d", "-prune", "-print", "-exec", "rm", "-rf", "{}", "+"], { stdout: "inherit" });
 
 console.log("Removing transient files...");
-await Bun.spawn(["bunx", "rimraf", "tmp"], { stdout: "inherit" });      // tmp files
-await Bun.spawn(["bunx", "rimraf", "docs"], { stdout: "inherit" });     // typedoc
-await Bun.spawn(["bunx", "rimraf", "coverage"], { stdout: "inherit" }); // jest coverage
-await Bun.spawn(["bunx", "rimraf", "target"], { stdout: "inherit" });   // rust
-await Bun.spawn(["bunx", "rimraf", ".nx"], { stdout: "inherit" });      // nx cache
+Bun.spawnSync(["bunx", "rimraf", "tmp"], { stdout: "inherit" });      // tmp files
+Bun.spawnSync(["bunx", "rimraf", "docs"], { stdout: "inherit" });     // typedoc
+Bun.spawnSync(["bunx", "rimraf", "coverage"], { stdout: "inherit" }); // jest coverage
+Bun.spawnSync(["bunx", "rimraf", "target"], { stdout: "inherit" });   // rust
+Bun.spawnSync(["bunx", "rimraf", ".nx"], { stdout: "inherit" });      // nx cache
 
 console.log("Cleanup complete.");`,
 
 	[`./${BASE_DIR}/boom/refresh.ts`]: (
 		_: MonorepoConfig,
 	) => /* ts */ `${"#!/usr/bin/env bun"}
-await Bun.spawn(["bun", "run", "boom"], { stdout: "inherit" });
-await Bun.spawn(["bun", "pm", "cache", "rm"], { stdout: "inherit" });
-await Bun.spawn(["rm", "bun.lockb"], { stdout: "inherit" });
-await Bun.spawn(["bun", "install"], { stdout: "inherit" });`,
+Bun.spawnSync(["bun", "run", "boom"], { stdout: "inherit" });
+Bun.spawnSync(["bun", "pm", "cache", "rm"], { stdout: "inherit" });
+Bun.spawnSync(["rm", "bun.lockb"], { stdout: "inherit" });
+Bun.spawnSync(["bun", "install"], { stdout: "inherit" });`,
 
 	// ==================
 	// = Build Command  =
@@ -44,7 +44,7 @@ await Bun.spawn(["bun", "install"], { stdout: "inherit" });`,
 	[`./${BASE_DIR}/build/index.ts`]: (
 		_: MonorepoConfig,
 	) => /* ts */ `${"#!/usr/bin/env bun"}
-await Bun.spawn(["bunx", "nx", "run-many", "--target=build", "--projects=tag:${getNxPackageTags()}"], { stdout: "inherit" });`,
+Bun.spawnSync(["bunx", "nx", "run-many", "--target=build", "--projects=tag:${getNxPackageTags()}"], { stdout: "inherit" });`,
 
 	// ===================
 	// = Commit Commands =
@@ -52,11 +52,11 @@ await Bun.spawn(["bunx", "nx", "run-many", "--target=build", "--projects=tag:${g
 	[`./${BASE_DIR}/commit/index.ts`]: (
 		_: MonorepoConfig,
 	) => /* ts */ `${"#!/usr/bin/env bun"}
-await Bun.spawn(["bunx", "cz"], { stdout: "inherit" });`,
+Bun.spawnSync(["bunx", "cz"], { stdout: "inherit" });`,
 	[`./${BASE_DIR}/commit/protect.ts`]: (
 		_: MonorepoConfig,
 	) => /* ts */ `${"#!/usr/bin/env bun"}
-const currentBranch = (await Bun.spawn(["git", "rev-parse", "--abbrev-ref", "HEAD"], {
+const currentBranch = (Bun.spawnSync(["git", "rev-parse", "--abbrev-ref", "HEAD"], {
   stdout: "pipe",
 }).stdout.text()).trim();
 
@@ -77,58 +77,83 @@ console.log(\`Committing to \${currentBranch}\`);`,
 	// =================
 	[`./${BASE_DIR}/docs/index.ts`]: (_: MonorepoConfig) =>
 		/* ts */ `${"#!/usr/bin/env bun"}
-await Bun.spawn(["bunx", "typedoc"], { stdout: "inherit" });`,
+Bun.spawnSync(["bunx", "typedoc"], { stdout: "inherit" });`,
 
 	// =====================
 	// = Generate Command  =
 	// =====================
 	[`./${BASE_DIR}/generate/index.ts`]: (config: MonorepoConfig) =>
 		/* ts */ `${"#!/usr/bin/env bun"}
-await Bun.spawn(["bun", "install"], { stdout: "inherit" });
-await Bun.spawn(["bunx", "orval", "--config", "${`${config.codegenConfigDir}/orval.config.ts`.replaceAll("//", "/")}"], { stdout: "inherit" });
-await Bun.spawn([
+
+	const srcTsFiles = new Bun.Glob("${config.packagesBaseDirPath}/**/src/**/*.ts");
+	const srcTsFolders = new Bun.Glob("${config.packagesBaseDirPath}/**/src/**/");
+console.log("${config.packagesBaseDirPath}/**/src/**/*.ts")
+console.log("🧹 Cleaning up generated files...");
+for await (const file of srcTsFiles.scan(".")) {
+	if (!file.endsWith("index.ts")) {
+		console.log("  Removing [ " + file + " ]...");
+		Bun.spawnSync(["bunx", "rimraf", file], { stdout: "inherit" });
+	}
+}
+
+for await (const file of srcTsFolders.scan(".")) {
+	console.log("  Removing [ " + file + " ]...");
+	Bun.spawnSync(["bunx", "rimraf", file], { stdout: "inherit" });
+}
+
+const distDirs = new Bun.Glob("${config.packagesBaseDirPath}/**/dist");
+for await (const file of distDirs.scan(".")) {
+	console.log("  Removing [ " + file + " ]...");
+	
+	Bun.spawnSync(["bunx", "rimraf", file], { stdout: "inherit" });
+}
+
+Bun.spawnSync(["bun", "install"], { stdout: "inherit" });
+Bun.spawnSync(["bunx", "./node_modules/.bin/rtk-query-codegen-openapi", "${config.codegenConfigsDir}/rtk-query.config.json"], { stdout: "inherit" });
+Bun.spawnSync([
 	"bunx",
 	"kubb",
 	"generate",
 	"--config",
-	"${`${config.codegenConfigDir}/kubb.config.ts`.replaceAll("//", "/")}"
+	"${`${config.codegenConfigsDir}/kubb.config.ts`}"
 ], { stdout: "inherit" });
+Bun.spawnSync(["bunx", "biome", "check", "--write", "--unsafe"], { stdout: "inherit" });
 `,
 
 	[`./${BASE_DIR}/generate/refresh.ts`]: (_: MonorepoConfig) =>
 		/* ts */ `${"#!/usr/bin/env bun"}
-await Bun.spawn(["bun", "boom:refresh"], { stdout: "inherit" });
-await Bun.spawn(["rm", "bun.lockb"], { stdout: "inherit" });
-await Bun.spawn(["rm -rf .nx"], { stdout: "inherit" });
-await Bun.spawn(["bun", "install"], { stdout: "inherit" });
-await Bun.spawn(["bun", "run", "generate"], { stdout: "inherit" });
+Bun.spawnSync(["bun", "boom:refresh"], { stdout: "inherit" });
+Bun.spawnSync(["rm", "bun.lockb"], { stdout: "inherit" });
+Bun.spawnSync(["rm -rf .nx"], { stdout: "inherit" });
+Bun.spawnSync(["bun", "install"], { stdout: "inherit" });
+Bun.spawnSync(["bun", "run", "generate"], { stdout: "inherit" });
 `,
 
 	// ==================
 	// = Lint Commands  =
 	// ==================
 	[`./${BASE_DIR}/lint/index.ts`]: (_: MonorepoConfig) =>
-		/* ts */ `await Bun.spawn(["bunx", "nx", "run-many", "--target=biome-lint", "--write=true", "--projects=tag:${getNxPackageTags()}"], { stdout: "inherit" });`,
+		/* ts */ `Bun.spawnSync(["biome", "lint", "--write", "--unsafe"], { stdout: "inherit" });`,
 
 	// ==========================
 	// = Local Registry Commands =
 	// ==========================
 	[`./${BASE_DIR}/local-registry/start.ts`]: (_: MonorepoConfig) =>
 		/* ts */ `${"#!/usr/bin/env bun"}
-await Bun.spawn(["bunx", "verdaccio"], { stdout: "inherit" });`,
+Bun.spawnSync(["bunx", "verdaccio"], { stdout: "inherit" });`,
 
 	[`./${BASE_DIR}/local-registry/publish.ts`]: (_: MonorepoConfig) =>
 		/* ts */ `${"#!/usr/bin/env bun"}
 const registry = "http://localhost:4873";
 
 // Set registry
-await Bun.spawn(["npm", "config", "set", "registry", registry], { stdout: "inherit" });
+Bun.spawnSync(["npm", "config", "set", "registry", registry], { stdout: "inherit" });
 
 // Build all packages
-await Bun.spawn(["bun", "run", "build"], { stdout: "inherit" });
+Bun.spawnSync(["bun", "run", "build"], { stdout: "inherit" });
 
 // Publish all packages
-await Bun.spawn([
+Bun.spawnSync([
   "bunx", 
   "nx",
   "release",
@@ -140,12 +165,12 @@ await Bun.spawn([
 ], { stdout: "inherit" });
 
 // Reset registry to npm
-await Bun.spawn(["npm", "config", "set", "registry", "https://registry.npmjs.org"], { stdout: "inherit" });`,
+Bun.spawnSync(["npm", "config", "set", "registry", "https://registry.npmjs.org"], { stdout: "inherit" });`,
 
 	[`./${BASE_DIR}/local-registry/stop.ts`]: (_: MonorepoConfig) =>
 		/* ts */ `${"#!/usr/bin/env bun"}
-await Bun.spawn(["bunx", "pm2", "stop", "verdaccio"], { stdout: "inherit" });
-await Bun.spawn(["bunx", "pm2", "delete", "verdaccio"], { stdout: "inherit" });`,
+Bun.spawnSync(["bunx", "pm2", "stop", "verdaccio"], { stdout: "inherit" });
+Bun.spawnSync(["bunx", "pm2", "delete", "verdaccio"], { stdout: "inherit" });`,
 
 	// ====================
 	// = Release Commands =
@@ -154,13 +179,13 @@ await Bun.spawn(["bunx", "pm2", "delete", "verdaccio"], { stdout: "inherit" });`
 		/* ts */ `${"#!/usr/bin/env bun"}
 	process.env.LEFTHOOK = "0";
 
-await Bun.spawn(["bunx", "nx", "release", "-y"], { stdout: "inherit" });`,
+Bun.spawnSync(["bunx", "nx", "release", "-y"], { stdout: "inherit" });`,
 
 	[`./${BASE_DIR}/release/dry-run.ts`]: (
 		_: MonorepoConfig,
 	) => /* ts */ `${"#!/usr/bin/env bun"}
 process.env.LEFTHOOK = "0";
-await Bun.spawn(["bunx", "nx", "release", "--dry-run", "--skip-publish"], { stdout: "inherit" });`,
+Bun.spawnSync(["bunx", "nx", "release", "--dry-run", "--skip-publish"], { stdout: "inherit" });`,
 
 	// ==================
 	// = Sort Commands  =
@@ -168,7 +193,7 @@ await Bun.spawn(["bunx", "nx", "release", "--dry-run", "--skip-publish"], { stdo
 	[`./${BASE_DIR}/sort/index.ts`]: (
 		_: MonorepoConfig,
 	) => /* ts */ `${"#!/usr/bin/env bun"}
-await Bun.spawn(["bunx", "nx", "run-many", "--target=sort", "--projects=tag:${getNxPackageTags()}"], { stdout: "inherit" });`,
+Bun.spawnSync(["bunx", "nx", "run-many", "--target=sort", "--projects=tag:${getNxPackageTags()}"], { stdout: "inherit" });`,
 } satisfies Record<
 	`./${typeof WORKSPACE_SCRIPTS_BASE_DIR}/${PackageSubpath<PackageScriptName>}`,
 	(config: MonorepoConfig) => string

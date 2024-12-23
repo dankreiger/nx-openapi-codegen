@@ -5,6 +5,7 @@ mock.module("node:fs/promises", () => ({
 	mkdir: mock(),
 	stat: mock(),
 	readFile: mock(),
+	writeFile: mock(),
 	rm: mock(),
 }));
 

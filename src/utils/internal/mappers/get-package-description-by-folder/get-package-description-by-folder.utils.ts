@@ -1,7 +1,7 @@
 import type { AvailablePackages } from "../../../../schemas/index.ts";
 
 export const getPackageDescriptionByFolder = (folder: AvailablePackages) => {
-	function assertUnreachable(x: never): never {
+	function assertUnreachable(_x: never): never {
 		throw new Error("Didn't expect to get here");
 	}
 	const COMMON_STR = "OpenAPI generated ";
@@ -23,6 +23,8 @@ export const getPackageDescriptionByFolder = (folder: AvailablePackages) => {
 				return `${COMMON_STR} Random mock service worker handlers.`;
 			case "oas":
 				return `${COMMON_STR} OpenAPI specification utilities and types.`;
+			case "rtk-query":
+				return `${COMMON_STR} Redux Toolkit Query utilities and types.`;
 			case "swr":
 				return `${COMMON_STR} Type definitions and utilities for SWR.`;
 			case "tanstack-react-query":

@@ -9,6 +9,7 @@ export const AvailablePackagesSchema = z.enum([
 	"msw-random",
 	"oas",
 	"swr",
+	"rtk-query",
 	"tanstack-react-query",
 	"types",
 	"zod",

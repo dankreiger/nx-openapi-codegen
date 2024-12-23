@@ -1,29 +1,35 @@
+import { execSync } from "node:child_process";
+import type { ReadonlyDeep } from "type-fest";
 import { z } from "zod";
+import { CONFIG_DIRECTORY_NAME } from "../../../constants/index.ts";
+import { getGithubNameByType } from "../../../prompts/internal/index.ts";
+import { getNormalizedPath } from "../../../utils/index.ts";
+import { ExistingFilePathSchema } from "../../index.ts";
+import { OpenapiUrlSchema } from "../openapi-url/index.ts";
 
 export const MonorepoConfigSchema = z
 	.object({
 		githubRepoName: z.string().trim(),
 		githubOrgName: z.string().trim(),
-		openapiUrl: z
-			.string()
-			.url()
-			.trim()
-			.default("https://petstore3.swagger.io/api/v3/openapi.json"),
+		openapiUrlOrFilePath: OpenapiUrlSchema.or(ExistingFilePathSchema),
 		packagesBaseDirPath: z.string().trim(),
-		// selectedPackages: z.array(AvailablePackagesSchema).readonly(),
 	})
 	.transform((res) => {
-		const [_, ...segments] = res.packagesBaseDirPath.split("/");
+		if (res.githubRepoName === getGithubNameByType({ nameType: "repo" })) {
+			execSync(`rimraf ./${res.githubRepoName}`);
+		}
 		return {
 			...res,
-			codegenConfigDir: `./config/${segments.filter(Boolean).join("/")}`,
+			codegenConfigsDir: getNormalizedPath({
+				path: `./${CONFIG_DIRECTORY_NAME}/${res.packagesBaseDirPath}`,
+			}),
 			npmOrgScope: `@${res.githubOrgName}` as const,
 		};
 	})
 	.readonly();
 
-export type MonorepoConfig = z.infer<typeof MonorepoConfigSchema>;
+export type MonorepoConfig = ReadonlyDeep<z.infer<typeof MonorepoConfigSchema>>;
 export type MonorepoConfigInput = Omit<
 	MonorepoConfig,
-	"codegenConfigDir" | "npmOrgScope"
+	"codegenConfigsDir" | "npmOrgScope"
 >;

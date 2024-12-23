@@ -1,3 +1,5 @@
+export * from "./bun-version.constants.ts";
+export * from "./config-directory-name.constants.ts";
 export * from "./dependencies.constants.ts";
 export * from "./package-tsup-config.constants.ts";
 export * from "./package-type-doc-config.constants.ts";

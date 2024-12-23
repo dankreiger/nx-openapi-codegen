@@ -1,12 +1,12 @@
 import { chmod, mkdir } from "node:fs/promises";
 import { dirname } from "node:path";
-import chalk from "chalk";
 import {
 	WORKSPACE_SCRIPTS_BASE_DIR as BASE_DIR,
 	SCRIPT_DIRECTORIES,
 	WORKSPACE_SCRIPT_FILES as SCRIPT_FILES,
 } from "../../../../../constants/index.ts";
 import type { MonorepoConfig } from "../../../../../schemas/index.ts";
+import { Logger } from "../../logger/logger.utils.ts";
 
 export async function createWorkspaceScripts(config: MonorepoConfig) {
 	// Define all script directories in alphabetical order
@@ -34,9 +34,7 @@ export async function createWorkspaceScripts(config: MonorepoConfig) {
 		),
 	);
 
-	console.log(
-		chalk.green(
-			"\n✓ All TypeScript files have been created and made executable!\n",
-		),
+	Logger.success(
+		"\n✓ All TypeScript files have been created and made executable!\n",
 	);
 }

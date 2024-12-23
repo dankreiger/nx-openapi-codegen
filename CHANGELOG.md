@@ -1,5 +1,12 @@
 
 
+## [0.0.9](https://github.com/dankreiger/nx-openapi-codegen/compare/v0.0.8...v0.0.9) (2024-12-23)
+
+
+### Bug Fixes
+
+* use rimraf binary ([021d913](https://github.com/dankreiger/nx-openapi-codegen/commit/021d91353c8df398dad1db9357d7ef7e3da44224))
+
 ## [0.0.8](https://github.com/dankreiger/nx-openapi-codegen/compare/v0.0.7...v0.0.8) (2024-12-23)
 
 

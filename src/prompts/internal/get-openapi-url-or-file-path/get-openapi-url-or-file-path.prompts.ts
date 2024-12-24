@@ -1,12 +1,11 @@
 import { input } from "@inquirer/prompts";
+import { DEFAULT_OPENAPI_URL } from "../../../constants/index.ts";
 import {
 	ExistingFilePathSchema,
 	OpenapiUrlSchema,
 } from "../../../schemas/index.ts";
 
 export async function getOpenapiUrlOrFilePath() {
-	const DEFAULT_OPENAPI_URL =
-		"https://petstore3.swagger.io/api/v3/openapi.json";
 	if (Bun.env.RUN_MODE === "quick") return DEFAULT_OPENAPI_URL;
 
 	return input({

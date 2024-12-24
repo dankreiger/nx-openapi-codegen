@@ -7,11 +7,13 @@ import { AvailablePackagesSchema } from "../../../schemas/index.ts";
  */
 export async function getSelectedPackages() {
 	return checkbox({
-		message: "Select the packages you want to generate:",
+		message:
+			"Select the packages you want to generated\n  (Note that 'faker' and 'types' packages will \n  always be generated since other packages require them)",
 		choices: AvailablePackagesSchema.options.map((pkg) => ({
 			name: pkg,
 			value: pkg,
 		})),
+
 		validate: (answer) => {
 			if (answer.length === 0) {
 				return "You must select at least one package.";

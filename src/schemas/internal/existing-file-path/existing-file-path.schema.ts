@@ -1,12 +1,12 @@
 import { statSync } from "node:fs";
 import { z } from "zod";
-import { getNormalizedPath } from "../../../utils/index.ts";
+import { parseFilePath } from "../file-path/index.ts";
 
 export const ExistingFilePathSchema = z.preprocess(
 	(value) => {
-		return getNormalizedPath({
-			path: typeof value === "string" ? value : "",
-		});
+		return {
+			path: parseFilePath(typeof value === "string" ? value : ""),
+		};
 	},
 	z
 		.string({

@@ -1,10 +1,15 @@
 import { execSync } from "node:child_process";
+import path from "node:path";
 import type { ReadonlyDeep } from "type-fest";
 import { z } from "zod";
 import { CONFIG_DIRECTORY_NAME } from "../../../constants/index.ts";
 import { getGithubNameByType } from "../../../prompts/internal/index.ts";
-import { getNormalizedPath } from "../../../utils/index.ts";
-import { ExistingFilePathSchema } from "../../index.ts";
+import {
+	AvailablePackagesSchema,
+	ExistingFilePathSchema,
+	FilePathSchema,
+	parseFilePath,
+} from "../../index.ts";
 import { OpenapiUrlSchema } from "../openapi-url/index.ts";
 
 export const MonorepoConfigSchema = z
@@ -12,17 +17,26 @@ export const MonorepoConfigSchema = z
 		githubRepoName: z.string().trim(),
 		githubOrgName: z.string().trim(),
 		openapiUrlOrFilePath: OpenapiUrlSchema.or(ExistingFilePathSchema),
-		packagesBaseDirPath: z.string().trim(),
+		packagesBaseDirPath: FilePathSchema,
+		selectedPackages: z.array(AvailablePackagesSchema).readonly(),
 	})
 	.transform((res) => {
 		if (res.githubRepoName === getGithubNameByType({ nameType: "repo" })) {
 			execSync(`npx rimraf ./${res.githubRepoName}`);
 		}
+
+		const codegenConfigsDir = parseFilePath(
+			path.join(CONFIG_DIRECTORY_NAME, res.packagesBaseDirPath),
+		);
+
+		const codegenConfigPathOffset = parseFilePath(
+			"../".repeat(res.packagesBaseDirPath.split("/").length + 1),
+		);
+
 		return {
 			...res,
-			codegenConfigsDir: getNormalizedPath({
-				path: `./${CONFIG_DIRECTORY_NAME}/${res.packagesBaseDirPath}`,
-			}),
+			codegenConfigsDir,
+			codegenConfigPathOffset,
 			npmOrgScope: `@${res.githubOrgName}` as const,
 		};
 	})

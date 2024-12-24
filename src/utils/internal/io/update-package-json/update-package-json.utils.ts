@@ -2,6 +2,7 @@ import { merge } from "lodash-es";
 import type { PackageJson } from "type-fest";
 
 export async function updatePackageJson(input: {
+	skipInstall?: boolean;
 	packageJsonOverride?: Partial<PackageJson.PackageJsonStandard> & {
 		sideEffects?: boolean;
 		module?: string;
@@ -26,5 +27,8 @@ export async function updatePackageJson(input: {
 	await Bun.spawnSync(["bunx", "sort-package-json", packageJsonPath], {
 		stdout: "inherit",
 	});
-	await Bun.spawnSync(["bun", "install"], { stdout: "inherit" });
+
+	if (!input.skipInstall) {
+		await Bun.spawnSync(["bun", "install"], { stdout: "inherit" });
+	}
 }

@@ -5,7 +5,6 @@ export const PACKAGE_TSUP_CONFIG_JSON = {
 	sourcemap: true,
 	clean: true,
 	shims: true,
-	external: ["tsup", "tslib"],
 };
 
 export const getPackageTsupConfigString = (

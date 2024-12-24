@@ -25,8 +25,8 @@ export const getPackageDescriptionByFolder = (folder: AvailablePackages) => {
 				return `${COMMON_STR} OpenAPI specification utilities and types.`;
 			case "rtk-query":
 				return `${COMMON_STR} Redux Toolkit Query utilities and types.`;
-			case "swr":
-				return `${COMMON_STR} Type definitions and utilities for SWR.`;
+			// case "swr":
+			// 	return `${COMMON_STR} Type definitions and utilities for SWR.`;
 			case "tanstack-react-query":
 				return `${COMMON_STR} Type definitions and utilities for TanStack React Query.`;
 			case "zod":

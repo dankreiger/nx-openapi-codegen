@@ -19,8 +19,8 @@ import { Logger } from "../logger/index.ts";
 import { updatePackageJson } from "../update-package-json/index.ts";
 import { updateTsconfigJson } from "../update-tsconfig-json/index.ts";
 
-export async function createPackage(config: MonorepoConfig) {
-	for (const folder of AvailablePackagesSchema.options) {
+export async function createPackages(config: MonorepoConfig) {
+	for (const folder of config.selectedPackages) {
 		const PACKAGE_NAME = `${config.npmOrgScope}/${folder}` as const;
 		const DIRECTORY = `${config.packagesBaseDirPath}/${folder}`;
 		console.log(
@@ -64,6 +64,7 @@ export async function createPackage(config: MonorepoConfig) {
 		}
 
 		await updatePackageJson({
+			skipInstall: true,
 			packageJsonPath: `${DIRECTORY}/package.json`,
 			packageJsonOverride: {
 				description: getPackageDescriptionByFolder(folder),
@@ -95,7 +96,7 @@ export async function createPackage(config: MonorepoConfig) {
 				types: "./dist/index.d.ts",
 				files: ["dist/**"],
 				scripts: {
-					build: `${isPackageBlockedFromBuilding(folder) ? `echo ${folder} is blocked from building}` : "tsup"}`,
+					build: `${isPackageBlockedFromBuilding(folder) ? `echo ${folder} is blocked from building` : "tsup"}`,
 					sort: "bunx sort-package-json",
 					typecheck:
 						"tsc -p ./tsconfig.json --noEmit --emitDeclarationOnly false",
@@ -119,11 +120,13 @@ export async function createPackage(config: MonorepoConfig) {
 		console.log(`\t Details: ${getPackageDescriptionByFolder(folder)}`);
 	}
 
+	await Bun.spawnSync(["bun", "install"], { stdout: "inherit" });
+
 	Logger.success("Done creating packages");
 }
 
 const isPackageBlockedFromBuilding = (folder: AvailablePackages): boolean =>
 	[
 		"oas", // only json files
-		"tanstack-react-query", // a little buggy with some type definitions, but we could still build it if we want
+		// "tanstack-react-query", // a little buggy with some type definitions, but we could still build it if we want
 	].includes(AvailablePackagesSchema.Enum[folder]);

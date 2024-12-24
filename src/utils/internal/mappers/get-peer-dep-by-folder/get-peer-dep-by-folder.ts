@@ -46,10 +46,10 @@ export const getPeerDepByFolder = (
 				"@reduxjs/toolkit": DEPENDENCIES["@reduxjs/toolkit"],
 				"react-redux": DEPENDENCIES["react-redux"],
 			};
-		case "swr":
-			return {
-				swr: DEPENDENCIES.swr,
-			};
+		// case "swr":
+		// 	return {
+		// 		swr: DEPENDENCIES.swr,
+		// 	};
 		case "types":
 			return {};
 

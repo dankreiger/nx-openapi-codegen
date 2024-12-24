@@ -1,22 +1,16 @@
 import { pipeAsync as pipe, tapAsync as tap } from "async-toolbelt";
-import { getMonorepoConfig } from "../../../../prompts/index.ts";
 import {
 	Logger,
 	createCodegenConfig,
-	createPackage,
+	createPackages,
 	createWorkspace,
 	updateTsconfigJsonBase,
 } from "../../index.ts";
 
-export const setupWorkspace = async () => {
-	const workspace = await pipe(
-		tap(createWorkspace),
-		tap(createPackage),
-		tap(createCodegenConfig),
-		tap(updateTsconfigJsonBase),
-	)(await getMonorepoConfig());
-
-	Logger.success("Done setting up workspace");
-
-	return workspace;
-};
+export const setupWorkspace = pipe(
+	tap(createWorkspace),
+	tap(createPackages),
+	tap(createCodegenConfig),
+	tap(updateTsconfigJsonBase),
+	tap(async () => Logger.success("Done setting up workspace")),
+);

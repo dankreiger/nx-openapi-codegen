@@ -1,5 +1,6 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import yaml from "yaml";
+import { BUN_VERSION } from "../../../../../constants/index.ts";
 import type { MonorepoConfig } from "../../../../../schemas/index.ts";
 
 export async function createWorkspaceGithubWorkflows(_: MonorepoConfig) {
@@ -139,8 +140,8 @@ export async function createWorkspaceGithubWorkflows(_: MonorepoConfig) {
 				steps: [
 					{
 						name: "Install Bun",
-						uses: "oven-sh/setup-bun@v1",
-						with: { "bun-version": "latest" },
+						uses: "oven-sh/setup-bun@v2",
+						with: { "bun-version": BUN_VERSION },
 					},
 					{
 						name: "Install dependencies",

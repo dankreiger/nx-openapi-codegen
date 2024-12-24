@@ -1,6 +1,7 @@
+import type { MonorepoConfig } from "../../../../schemas/index.ts";
 import { repairFiles } from "../repair-files/index.ts";
 
-export const runBuildSteps = async () => {
+export const runBuildSteps = async (_: MonorepoConfig) => {
 	// Generate
 	const generateResult = Bun.spawnSync(["bun", "--bun", "run", "generate"], {
 		stdout: "inherit",

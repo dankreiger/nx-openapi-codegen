@@ -11,7 +11,7 @@ describe("AvailablePackagesSchema", () => {
 			"msw-constant",
 			"msw-random",
 			"oas",
-			"swr",
+			// "swr",
 			"tanstack-react-query",
 			"types",
 			"zod",

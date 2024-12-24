@@ -51,6 +51,7 @@ export const WORKSPACE_BIOME_CONFIG = {
 				noConstructorReturn: "off",
 				noUnsafeOptionalChaining: "off",
 				useImportExtensions: "error",
+				noUnusedVariables: "off",
 			},
 			performance: {
 				noAccumulatingSpread: "off",

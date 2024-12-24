@@ -1,5 +1,12 @@
 
 
+## [0.0.11](https://github.com/dankreiger/nx-openapi-codegen/compare/v0.0.10...v0.0.11) (2024-12-24)
+
+
+### Bug Fixes
+
+* allow packages to be selectable ([5185f96](https://github.com/dankreiger/nx-openapi-codegen/commit/5185f96b829ff41a37ea566b94b8dee593ce2f71))
+
 ## [0.0.10](https://github.com/dankreiger/nx-openapi-codegen/compare/v0.0.9...v0.0.10) (2024-12-23)
 
 

@@ -40,7 +40,7 @@ export async function createWorkspacePackageJson(config: MonorepoConfig) {
 				build: "bun ./tools/scripts/build/index.ts",
 				boom: "bun --bun ./tools/scripts/boom/index.ts",
 				"boom:refresh": "bun --bun ./tools/scripts/boom/refresh.ts",
-				commit: "bun --bun ./tools/scripts/commit/index.ts",
+				commit: "cz",
 				"commit:protect": "bun --bun ./tools/scripts/commit/protect.ts",
 				docs: "bun --bun ./tools/scripts/docs/index.ts",
 				generate: "bun --bun ./tools/scripts/generate/index.ts",
@@ -53,8 +53,12 @@ export async function createWorkspacePackageJson(config: MonorepoConfig) {
 				"local-registry:stop":
 					"bun --bun ./tools/scripts/local-registry/stop.ts",
 				sort: "bun --bun ./tools/scripts/sort/index.ts",
-				release: "bun --bun ./tools/scripts/release/index.ts",
-				"release:dry-run": "bun --bun ./tools/scripts/release/dry-run.ts",
+				release: "LEFTHOOK=0 pnpx nx release -y",
+				"release:first-time": "LEFTHOOK=0 pnpx nx release ---first-release -y",
+				"release:dry-run":
+					"LEFTHOOK=0 bunx nx release --dry-run --skip-publish",
+				"release:dry-run:first-time":
+					"LEFTHOOK=0 bunx nx release --first-release --dry-run --skip-publish",
 			} satisfies Readonly<Record<PackageScriptName, string>>,
 			devDependencies: DEPENDENCIES,
 		},

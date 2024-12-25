@@ -1,12 +1,11 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import type { ReadonlyDeep } from "type-fest";
 import yaml from "yaml";
-import { BUN_VERSION } from "../../../../../constants/index.ts";
 import type { MonorepoConfig } from "../../../../../schemas/index.ts";
-import type { HttpsJsonSchemastoreOrgGithubActionJson } from "../../../../../types/github-action.d.ts";
 import type { HttpsJsonSchemastoreOrgGithubWorkflowJson } from "../../../../../types/github-workflow.d.ts";
+import { Logger } from "../../logger/index.ts";
 
-type GithubWorkflowName = "main" | "pull-request" | "update-models";
+type GithubWorkflowName = "main" | "pull-request" | "release" | "update-models";
 type GithubWorkflowNameString<
 	T extends GithubWorkflowName = GithubWorkflowName,
 > = `${T}.yml`;
@@ -20,29 +19,11 @@ type GithubWorkflow<T extends GithubWorkflowName = GithubWorkflowName> =
 		>
 	>;
 
-type GithubActionName =
-	| "prepare-authorized-environment"
-	| "bun-install-dependencies";
-type GithubActionNameString<T extends GithubActionName = GithubActionName> =
-	`${T}/action.yml`;
-type GithubAction<T extends GithubActionName = GithubActionName> = ReadonlyDeep<
-	Record<GithubActionNameString<T>, HttpsJsonSchemastoreOrgGithubActionJson>
->;
-
-export async function createWorkspaceGithubWorkflows(config: MonorepoConfig) {
+export async function createWorkspaceGithubWorkflows(_: MonorepoConfig) {
 	const workflowsDir = ".github/workflows";
-	const actionsDir = ".github/actions";
-	const CURRENT_NODE_VERSION = (await Bun.$`node --version`.text())
-		.trim()
-		.replace("v", "")
-		.replace("\n", "");
 
 	// Ensure directories exist
 	await mkdir(workflowsDir, { recursive: true });
-	await mkdir(`${actionsDir}/bun-install-dependencies`, { recursive: true });
-	await mkdir(`${actionsDir}/prepare-authorized-environment`, {
-		recursive: true,
-	});
 
 	// Define workflows in JSON
 	const workflows = {
@@ -121,6 +102,56 @@ export async function createWorkspaceGithubWorkflows(config: MonorepoConfig) {
 				},
 			},
 		},
+		"release.yml": {
+			name: "release",
+			on: ["workflow_dispatch"],
+			permissions: {
+				actions: "write",
+				contents: "write",
+				"id-token": "write",
+				packages: "write",
+			},
+			jobs: {
+				release: {
+					"runs-on": "ubuntu-latest",
+					steps: [
+						{
+							name: "Fail if branch is not main",
+							if: "github.ref != 'refs/heads/main'",
+							run: 'echo "This workflow should not be triggered with workflow_dispatch on a branch other than main"\nexit 1\n',
+						},
+						{
+							uses: "actions/checkout@v4",
+							with: {
+								"fetch-depth": 0,
+							},
+						},
+						{
+							name: "Prepare Authorized Environment",
+							uses: "./.github/actions/prepare-authorized-environment",
+							with: {
+								branch: "main",
+								token: "${{ secrets.GITHUB_TOKEN }}",
+							},
+						},
+						{
+							name: "Build packages",
+							run: "bun run build",
+							shell: "bash",
+						},
+						{
+							name: "Run release",
+							run: "bun run release",
+							shell: "bash",
+							env: {
+								NODE_AUTH_TOKEN: "${{ secrets.GITHUB_TOKEN }}",
+								GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}",
+							},
+						},
+					],
+				},
+			},
+		},
 		"update-models.yml": {
 			name: "update-models",
 			on: {
@@ -175,74 +206,6 @@ export async function createWorkspaceGithubWorkflows(config: MonorepoConfig) {
 		},
 	} as const satisfies GithubWorkflow;
 
-	// Define composite actions in JSON
-	const actions = {
-		"bun-install-dependencies/action.yml": {
-			name: "Bun Install Dependencies",
-			description: "Prepares the repo by installing dependencies using Bun",
-			runs: {
-				using: "composite",
-				steps: [
-					{
-						name: "Install Bun",
-						uses: "oven-sh/setup-bun@v2",
-						with: { "bun-version": BUN_VERSION },
-					},
-					{
-						name: "Install dependencies",
-						shell: "bash",
-						run: "bun install --frozen-lockfile",
-					},
-				],
-			},
-		},
-		"prepare-authorized-environment/action.yml": {
-			name: "Prepare Authorized Environment",
-			description:
-				"Sets up node.js with GitHub token, nx cache, and git config, and installs dependencies using Bun",
-			inputs: {
-				branch: {
-					description: "Branch name",
-					required: false,
-				},
-				token: {
-					description: "GitHub token",
-					required: true,
-				},
-			},
-			runs: {
-				using: "composite",
-				steps: [
-					{
-						name: `"Use Node.js ${CURRENT_NODE_VERSION}"`,
-						uses: "actions/setup-node@v4",
-						with: {
-							"node-version": `${CURRENT_NODE_VERSION}`,
-							"registry-url": "https://npm.pkg.github.com",
-							scope: `${config.npmOrgScope}`,
-							token: "${{ inputs.token }}",
-						},
-					},
-					{
-						name: "Git config",
-						shell: "bash",
-						run: `
-git config user.name 'github-actions[bot]'
-git config user.email 'github-actions[bot]@users.noreply.github.com'`,
-					},
-					{
-						name: "Bun Install Dependencies",
-						uses: "./.github/actions/bun-install-dependencies",
-						with: {
-							token: "${{ inputs.token }}",
-							branch: "${{ inputs.branch }}",
-						},
-					},
-				],
-			},
-		},
-	} as const satisfies GithubAction;
-
 	// Write workflows as YAML
 	for (const [filename, content] of Object.entries(workflows)) {
 		const yamlContent = yaml.stringify(content);
@@ -251,13 +214,5 @@ git config user.email 'github-actions[bot]@users.noreply.github.com'`,
 		await writeFile(path, yamlContent);
 	}
 
-	// Write actions as YAML
-	for (const [filename, content] of Object.entries(actions)) {
-		const yamlContent = yaml.stringify(content);
-		const path = `${actionsDir}/${filename}`;
-		console.log(`Creating action: ${path}`);
-		await writeFile(path, yamlContent);
-	}
-
-	console.log("All workflows and actions have been created successfully.");
+	Logger.success("All Github workflows have been created successfully.");
 }

@@ -111,7 +111,7 @@ Bun.spawnSync(["bunx", "typedoc"], { stdout: "inherit" });`,
 	Bun.spawnSync(["bunx", "rimraf", ...dists], { stdout: "inherit" });
 
 	Bun.spawnSync(["bun", "install"], { stdout: "inherit" });
-	${config.selectedPackages.includes("rtk-query") ? 'Bun.spawnSync(["bunx", "@rtk-query/codegen-openapi", "${config.codegenConfigsDir}/rtk-query.config.json"], { stdout: "inherit" });' : ""}
+	${config.selectedPackages.includes("rtk-query") ? `Bun.spawnSync(["bunx", "@rtk-query/codegen-openapi", "${config.codegenConfigsDir}/rtk-query.config.json"], { stdout: "inherit" });` : ""}
 	Bun.spawnSync(["bunx", "kubb", "generate", "--config", "${`${config.codegenConfigsDir}/kubb.config.ts`}"], { stdout: "inherit" });
 	// Import from faker-random inside of msw-random
 	${config.selectedPackages.includes("msw-random") ? /* ts */ `await replaceInFile({ files: '${config.packagesBaseDirPath}/msw-random/src/*.ts', from: ['faker-constant', '(data))', '() {'], to: ['faker-random', '())', '(data?: any) {'] })` : ""}

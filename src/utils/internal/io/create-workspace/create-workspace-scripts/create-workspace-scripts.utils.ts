@@ -29,8 +29,8 @@ export async function createWorkspaceScripts(config: MonorepoConfig) {
 
 	// Create all files
 	await Promise.all(
-		Object.entries(SCRIPT_FILES).map(([filepath, getConfig]) =>
-			createFile(filepath, getConfig(config)),
+		Object.entries(SCRIPT_FILES).map(async ([filepath, getConfig]) =>
+			createFile(filepath, await getConfig(config)),
 		),
 	);
 

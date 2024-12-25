@@ -10,13 +10,15 @@ import {
 	FilePathSchema,
 	parseFilePath,
 } from "../../index.ts";
-import { OpenapiUrlSchema } from "../openapi-url/index.ts";
+import { OpenapiUrlSchema } from "../openapi-url/openapi-url.schemas.ts";
+import { SdkLanguageSchema } from "../sdk-language/sdk-language.schemas.ts";
 
 export const MonorepoConfigSchema = z
 	.object({
 		githubRepoName: z.string().trim(),
 		githubOrgName: z.string().trim(),
 		openapiUrlOrFilePath: OpenapiUrlSchema.or(ExistingFilePathSchema),
+		sdkLanguages: z.array(SdkLanguageSchema),
 		packagesBaseDirPath: FilePathSchema,
 		selectedPackages: z.array(AvailablePackagesSchema).readonly(),
 	})
@@ -30,7 +32,7 @@ export const MonorepoConfigSchema = z
 		);
 
 		const codegenConfigPathOffset = parseFilePath(
-			"../".repeat(res.packagesBaseDirPath.split("/").length + 1),
+			"../".repeat(res.packagesBaseDirPath.split("/").length + 2),
 		);
 
 		return {

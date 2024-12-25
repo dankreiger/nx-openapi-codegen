@@ -22,7 +22,7 @@ import { updateTsconfigJson } from "../update-tsconfig-json/index.ts";
 export async function createPackages(config: MonorepoConfig) {
 	for (const folder of config.selectedPackages) {
 		const PACKAGE_NAME = `${config.npmOrgScope}/${folder}` as const;
-		const DIRECTORY = `${config.packagesBaseDirPath}/${folder}`;
+		const DIRECTORY = `${config.packagesBaseDirPath}/typescript/${folder}`;
 		console.log(
 			chalk.blue(
 				`\n⚡ Generating library for: ${chalk.bold.white(folder)} with prefix: ${chalk.bold.white(config.githubOrgName)}\n`,

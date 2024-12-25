@@ -134,7 +134,7 @@ const getKubbPlugins = (selectedPackages: readonly AvailablePackages[]) => {
 					pluginInfo.pluginFnNameString,
 				),
 				output: {
-					path: `./${packageName}/src`,
+					path: `./typescript/${packageName}/src`,
 				},
 				...getKubbSpecificOpts(packageName),
 			} as const),

@@ -7,3 +7,4 @@ export * from "./kubb/index.ts";
 export * from "./monorepo-config/index.ts";
 export * from "./openapi-url/index.ts";
 export * from "./package-script-name/index.ts";
+export * from "./sdk-language/index.ts";

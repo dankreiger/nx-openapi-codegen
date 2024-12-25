@@ -26,7 +26,7 @@ export const KubbPluginsSchema = z
 			packageName: AvailablePackagesSchema.extract(["axios"]),
 			pluginFnNameString: KubbPluginNameSchema.extract(["pluginClient"]),
 			output: z.object({
-				path: z.literal("./axios/src"),
+				path: z.literal("./typescript/axios/src"),
 			}),
 			client: z.literal("axios"),
 		}),
@@ -34,7 +34,7 @@ export const KubbPluginsSchema = z
 			packageName: AvailablePackagesSchema.extract(["faker-constant"]),
 			pluginFnNameString: KubbPluginNameSchema.extract(["pluginFaker"]),
 			output: z.object({
-				path: z.literal("./faker-constant/src"),
+				path: z.literal("./typescript/faker-constant/src"),
 			}),
 			seed: z.array(z.number().min(222).max(222)),
 		}),
@@ -42,7 +42,7 @@ export const KubbPluginsSchema = z
 			packageName: AvailablePackagesSchema.extract(["fetch"]),
 			pluginFnNameString: KubbPluginNameSchema.extract(["pluginClient"]),
 			output: z.object({
-				path: z.literal("./fetch/src"),
+				path: z.literal("./typescript/fetch/src"),
 			}),
 			client: z.literal("fetch"),
 		}),
@@ -54,8 +54,8 @@ export const KubbPluginsSchema = z
 			pluginFnNameString: KubbPluginNameSchema.extract(["pluginMsw"]),
 			output: z.object({
 				path: z.union([
-					z.literal("./msw-constant/src"),
-					z.literal("./msw-random/src"),
+					z.literal("./typescript/msw-constant/src"),
+					z.literal("./typescript/msw-random/src"),
 				]),
 			}),
 			parser: z.literal("faker"),
@@ -64,7 +64,7 @@ export const KubbPluginsSchema = z
 			packageName: AvailablePackagesSchema.extract(["tanstack-react-query"]),
 			pluginFnNameString: KubbPluginNameSchema.extract(["pluginReactQuery"]),
 			output: z.object({
-				path: z.literal("./tanstack-react-query/src"),
+				path: z.literal("./typescript/tanstack-react-query/src"),
 			}),
 			client: z.object({
 				dataReturnType: z.literal("full"),
@@ -87,19 +87,19 @@ export const KubbPluginsSchema = z
 			output: z.object({
 				path: z.union([
 					z.literal(
-						"./faker-random/src" satisfies `./${z.infer<typeof AvailablePackagesSchema>}/src`,
+						"./typescript/faker-random/src" satisfies `./typescript/${z.infer<typeof AvailablePackagesSchema>}/src`,
 					),
 					z.literal(
-						"./oas/src" satisfies `./${z.infer<typeof AvailablePackagesSchema>}/src`,
+						"./typescript/oas/src" satisfies `./typescript/${z.infer<typeof AvailablePackagesSchema>}/src`,
 					),
 					// z.literal(
 					// 	"./swr/src" satisfies `./${z.infer<typeof AvailablePackagesSchema>}/src`,
 					// ),
 					z.literal(
-						"./types/src" satisfies `./${z.infer<typeof AvailablePackagesSchema>}/src`,
+						"./typescript/types/src" satisfies `./typescript/${z.infer<typeof AvailablePackagesSchema>}/src`,
 					),
 					z.literal(
-						"./zod/src" satisfies `./${z.infer<typeof AvailablePackagesSchema>}/src`,
+						"./typescript/zod/src" satisfies `./typescript/${z.infer<typeof AvailablePackagesSchema>}/src`,
 					),
 				]),
 			}),

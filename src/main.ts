@@ -1,28 +1,25 @@
 #!/usr/bin/env bun
+import { pipe, tap } from "async-toolbelt";
 import { getMonorepoConfig } from "./prompts/get-monorepo-config.prompts.ts";
 import { ShellErrorOutputSchema } from "./schemas/internal/index.ts";
 import {
 	Logger,
 	checkBunInstallation,
-	runBuildSteps,
+	runCodegen,
 	setupWorkspace,
 } from "./utils/internal/index.ts";
 
 (async () => {
 	try {
-		// Check Bun installation
-		await checkBunInstallation();
+		const config = await checkBunInstallation().then(getMonorepoConfig);
 
-		// Get monorepo config
-		const config = await getMonorepoConfig();
-
-		// Setup workspace
-		await setupWorkspace(config);
-
-		// Run build steps
-		await runBuildSteps(config);
-
-		Logger.success("All selected libraries generated successfully!");
+		await pipe(
+			tap(setupWorkspace),
+			tap(runCodegen),
+			tap(async () =>
+				Logger.success("All selected libraries generated successfully!"),
+			),
+		)(config);
 	} catch (err) {
 		const shellError = ShellErrorOutputSchema.safeParse(err);
 		console.error(shellError.success ? shellError.data.stderr : err);

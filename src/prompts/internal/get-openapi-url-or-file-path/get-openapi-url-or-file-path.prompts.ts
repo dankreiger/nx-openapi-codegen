@@ -6,7 +6,7 @@ import {
 } from "../../../schemas/index.ts";
 
 export async function getOpenapiUrlOrFilePath() {
-	if (Bun.env.RUN_MODE === "quick") return DEFAULT_OPENAPI_URL;
+	if (Bun.env.RUN_MODE === "skip-prompts") return DEFAULT_OPENAPI_URL;
 
 	return input({
 		message: "Enter the OpenAPI URL or file path:",

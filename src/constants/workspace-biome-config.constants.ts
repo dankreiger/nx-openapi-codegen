@@ -35,7 +35,6 @@ export const WORKSPACE_BIOME_CONFIG = {
 				noArrayIndexKey: "warn",
 				noShadowRestrictedNames: "off",
 				noConfusingVoidType: "off",
-				noUnusedVariables: "off",
 			},
 			complexity: {
 				noForEach: "off",

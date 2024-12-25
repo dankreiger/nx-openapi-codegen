@@ -15,6 +15,7 @@ export const DEPENDENCIES = {
 	"@kubb/plugin-ts": "3.3.4",
 	"@kubb/plugin-zod": "3.3.4",
 	"@kubb/react": "3.3.4",
+	"@openapitools/openapi-generator-cli": "2.15.3",
 	"@nx/devkit": "20.3.0",
 	"@reduxjs/toolkit": "2.5.0",
 	"@rtk-query/codegen-openapi": "2.0.0",

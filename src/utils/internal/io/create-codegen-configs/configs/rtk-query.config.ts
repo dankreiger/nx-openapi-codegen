@@ -9,7 +9,7 @@ export async function generateRtkQueryConfig(config: MonorepoConfig) {
 		config.codegenConfigPathOffset,
 		config.packagesBaseDirPath,
 	);
-	const RTK_SRC_FOLDER = "rtk-query/src" as const;
+	const RTK_SRC_FOLDER = "typescript/rtk-query/src" as const;
 	const EXPORT_NAME = camelCase(config.githubOrgName);
 	const BASE_API_MODULE_NAME = "emptySplitApi" as const;
 

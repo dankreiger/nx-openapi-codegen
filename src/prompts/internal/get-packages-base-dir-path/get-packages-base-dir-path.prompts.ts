@@ -14,7 +14,7 @@ import { parseFilePath } from "../../../schemas/index.ts";
  * @default packages
  */
 export async function getPackagesBaseDirPath() {
-	if (Bun.env.RUN_MODE === "quick") return "packages";
+	if (Bun.env.RUN_MODE === "skip-prompts") return "packages";
 	const config: Parameters<typeof input>[0] = {
 		message: "Enter the packages base directory",
 		default: DEFAULT_PACKAGES_BASE_DIR_PATH,

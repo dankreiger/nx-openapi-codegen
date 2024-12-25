@@ -10,6 +10,52 @@ import { updatePackageJson } from "../../update-package-json/index.ts";
 export async function createWorkspacePackageJson(config: MonorepoConfig) {
 	await updatePackageJson({
 		packageJsonOverride: {
+			config: {
+				commitizen: {
+					path: "./node_modules/cz-conventional-changelog",
+				},
+			},
+			devDependencies: DEPENDENCIES,
+			homepage: getGithubRepoUrl(config),
+			overrides: {
+				esbuild: "0.24.0",
+				react: "18.3.1",
+				"react-dom": "18.3.1",
+			},
+			publishConfig: {
+				[`${config.npmOrgScope}:registry`]: "https://npm.pkg.github.com",
+			},
+			repository: {
+				type: "git",
+				url: getGithubRepoUrl(config),
+			},
+			scripts: {
+				boom: "bun --bun ./tools/scripts/boom/index.ts",
+				"boom:refresh": "bun --bun ./tools/scripts/boom/refresh.ts",
+				build: "bun ./tools/scripts/build/index.ts",
+				// "bump:kotlin-version":
+				// 	"bun --bun ./tools/scripts/bump/kotlin-version.ts",
+				// "bump:swift-version": "bun --bun ./tools/scripts/bump/swift-version.ts",
+				commit: "cz",
+				"commit:protect": "bun --bun ./tools/scripts/commit/protect.ts",
+				docs: "bun --bun ./tools/scripts/docs/index.ts",
+				generate: "bun --bun ./tools/scripts/generate/index.ts",
+				"generate:refresh": "bun --bun ./tools/scripts/generate/refresh.ts",
+				lint: "bun --bun ./tools/scripts/lint/index.ts",
+				"local-registry:publish":
+					"bun ./tools/scripts/local-registry/publish.ts",
+				"local-registry:start":
+					"bun --bun ./tools/scripts/local-registry/start.ts",
+				"local-registry:stop":
+					"bun --bun ./tools/scripts/local-registry/stop.ts",
+				release: "bun --bun ./tools/scripts/release/index.ts",
+				"release:dry-run": "bun --bun ./tools/scripts/release/dry-run.ts",
+				"release:dry-run-first-time":
+					"bun --bun ./tools/scripts/release/dry-run-first-time.ts",
+				"release:first-time": "bun --bun ./tools/scripts/release/first-time.ts",
+				sort: "bun --bun ./tools/scripts/sort/index.ts",
+			} satisfies Readonly<Record<PackageScriptName, string>>,
+			version: "0.0.1",
 			workspaces: values(config.byLanguage)
 				.filter(Boolean)
 				.map((dir) => {
@@ -18,49 +64,6 @@ export async function createWorkspacePackageJson(config: MonorepoConfig) {
 					}
 					return `${dir.packagesDirectoryPath}/**/*`;
 				}),
-			config: {
-				commitizen: {
-					path: "./node_modules/cz-conventional-changelog",
-				},
-			},
-			homepage: getGithubRepoUrl(config),
-			publishConfig: {
-				[`${config.npmOrgScope}:registry`]: "https://npm.pkg.github.com",
-			},
-			repository: {
-				type: "git",
-				url: getGithubRepoUrl(config),
-			},
-			overrides: {
-				esbuild: "0.24.0",
-				react: "18.3.1",
-				"react-dom": "18.3.1",
-			},
-			scripts: {
-				build: "bun ./tools/scripts/build/index.ts",
-				boom: "bun --bun ./tools/scripts/boom/index.ts",
-				"boom:refresh": "bun --bun ./tools/scripts/boom/refresh.ts",
-				commit: "cz",
-				"commit:protect": "bun --bun ./tools/scripts/commit/protect.ts",
-				docs: "bun --bun ./tools/scripts/docs/index.ts",
-				generate: "bun --bun ./tools/scripts/generate/index.ts",
-				"generate:refresh": "bun --bun ./tools/scripts/generate/refresh.ts",
-				lint: "bun --bun ./tools/scripts/lint/index.ts",
-				"local-registry:start":
-					"bun --bun ./tools/scripts/local-registry/start.ts",
-				"local-registry:publish":
-					"bun ./tools/scripts/local-registry/publish.ts",
-				"local-registry:stop":
-					"bun --bun ./tools/scripts/local-registry/stop.ts",
-				sort: "bun --bun ./tools/scripts/sort/index.ts",
-				release: "LEFTHOOK=0 pnpx nx release -y",
-				"release:first-time": "LEFTHOOK=0 pnpx nx release ---first-release -y",
-				"release:dry-run":
-					"LEFTHOOK=0 bunx nx release --dry-run --skip-publish",
-				"release:dry-run:first-time":
-					"LEFTHOOK=0 bunx nx release --first-release --dry-run --skip-publish",
-			} satisfies Readonly<Record<PackageScriptName, string>>,
-			devDependencies: DEPENDENCIES,
 		},
 	});
 }

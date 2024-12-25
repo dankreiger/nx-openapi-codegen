@@ -1,5 +1,4 @@
-// TODO: consider converting these to bash scripts since bun doesn't work with some interactive scripts at the moment
-
+// TODO: add nx release script that will also bump swift/kotlin versions
 import { toLowerCase } from "strong-string";
 import type {
 	MonorepoConfig,
@@ -57,7 +56,7 @@ Bun.spawnSync(["bunx", "nx", "run-many", "--target=build", "--projects=tag:${get
 	// ===================
 	[`./${BASE_DIR}/commit/protect.ts`]: async (
 		_: MonorepoConfig,
-	) => /* ts */ `${"#!/usr/bin/env bun"}
+	) => /* ts */ `$"#!/usr/bin/env bun"
 const currentBranch = (Bun.spawnSync(["git", "rev-parse", "--abbrev-ref", "HEAD"], {
   stdout: "pipe",
 }).stdout.text()).trim();
@@ -235,6 +234,30 @@ Bun.spawnSync(["npm", "config", "set", "registry", "https://registry.npmjs.org"]
 		/* ts */ `${"#!/usr/bin/env bun"}
 Bun.spawnSync(["bunx", "pm2", "stop", "verdaccio"], { stdout: "inherit" });
 Bun.spawnSync(["bunx", "pm2", "delete", "verdaccio"], { stdout: "inherit" });`,
+
+	// ====================
+	// = Release Commands =
+	// ====================
+	[`./${BASE_DIR}/release/index.ts`]: async (_: MonorepoConfig) =>
+		/* ts */ `${"#!/usr/bin/env bun"}
+	process.env.LEFTHOOK = "0";
+
+Bun.spawnSync(["bunx", "nx", "release", "-y"], { stdout: "inherit" });`,
+
+	[`./${BASE_DIR}/release/first-time.ts`]: async (_: MonorepoConfig) =>
+		/* ts */ `${"#!/usr/bin/env bun"}
+	process.env.LEFTHOOK = "0";
+Bun.spawnSync(["bunx", "nx", "release", "--first-release", "-y"], { stdout: "inherit" });`,
+
+	[`./${BASE_DIR}/release/dry-run.ts`]: async (_: MonorepoConfig) =>
+		/* ts */ `${"#!/usr/bin/env bun"}
+	process.env.LEFTHOOK = "0";
+Bun.spawnSync(["bunx", "nx", "release", "--dry-run", "--skip-publish", "-y"], { stdout: "inherit" });`,
+
+	[`./${BASE_DIR}/release/dry-run-first-time.ts`]: async (_: MonorepoConfig) =>
+		/* ts */ `${"#!/usr/bin/env bun"}
+	process.env.LEFTHOOK = "0";
+Bun.spawnSync(["bunx", "nx", "release", "--first-release", "--dry-run", "--skip-publish", "-y"], { stdout: "inherit" });`,
 
 	// ==================
 	// = Sort Commands  =

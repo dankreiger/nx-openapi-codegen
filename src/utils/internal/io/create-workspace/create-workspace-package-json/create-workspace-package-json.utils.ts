@@ -25,7 +25,7 @@ export async function createWorkspacePackageJson(config: MonorepoConfig) {
 			},
 			homepage: getGithubRepoUrl(config),
 			publishConfig: {
-				[`${config.githubOrgName}:registry`]: "https://npm.pkg.github.com",
+				[`${config.npmOrgScope}:registry`]: "https://npm.pkg.github.com",
 			},
 			repository: {
 				type: "git",

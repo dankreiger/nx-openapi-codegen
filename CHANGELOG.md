@@ -1,5 +1,7 @@
 
 
+## [0.0.19](https://github.com/dankreiger/nx-openapi-codegen/compare/v0.0.18...v0.0.19) (2024-12-25)
+
 ## [0.0.18](https://github.com/dankreiger/nx-openapi-codegen/compare/v0.0.17...v0.0.18) (2024-12-25)
 
 

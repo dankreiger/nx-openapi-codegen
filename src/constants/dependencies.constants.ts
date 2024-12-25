@@ -30,6 +30,7 @@ export const DEPENDENCIES = {
 	react: "18.3.1",
 	"react-dom": "18.3.1",
 	"react-redux": "9.2.0",
+	"replace-in-file": "8.3.0",
 	"sort-package-json": "2.2.0",
 	swr: "2.2.5",
 	tslib: "2.8.1",

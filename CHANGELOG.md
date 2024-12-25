@@ -1,5 +1,12 @@
 
 
+## [0.0.15](https://github.com/dankreiger/nx-openapi-codegen/compare/v0.0.14...v0.0.15) (2024-12-25)
+
+
+### Bug Fixes
+
+* add missing dep ([cce770b](https://github.com/dankreiger/nx-openapi-codegen/commit/cce770b4e1e76ec0952e1db7cb70457111511172))
+
 ## [0.0.14](https://github.com/dankreiger/nx-openapi-codegen/compare/v0.0.13...v0.0.14) (2024-12-25)
 
 

@@ -1,5 +1,12 @@
 
 
+## [0.0.17](https://github.com/dankreiger/nx-openapi-codegen/compare/v0.0.16...v0.0.17) (2024-12-25)
+
+
+### Bug Fixes
+
+* remove line ([22b7a38](https://github.com/dankreiger/nx-openapi-codegen/commit/22b7a38f5323861de3d30a02b39654432f5e732c))
+
 ## [0.0.16](https://github.com/dankreiger/nx-openapi-codegen/compare/v0.0.15...v0.0.16) (2024-12-25)
 
 

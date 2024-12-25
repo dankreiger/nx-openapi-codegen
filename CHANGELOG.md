@@ -1,5 +1,14 @@
 
 
+## [0.0.12](https://github.com/dankreiger/nx-openapi-codegen/compare/v0.0.11...v0.0.12) (2024-12-25)
+
+
+### Bug Fixes
+
+* rtk generation ([c459061](https://github.com/dankreiger/nx-openapi-codegen/commit/c459061793c383bd5a95b50d0f382f60ef0b5524))
+* update lefthook config ([805564a](https://github.com/dankreiger/nx-openapi-codegen/commit/805564a3109a01dc3079c1b337f5403e21122cf7))
+* update lefthook config with stage fixed ([e0b9c31](https://github.com/dankreiger/nx-openapi-codegen/commit/e0b9c312765552eeba5d1059bc6dedae97be7d63))
+
 ## [0.0.11](https://github.com/dankreiger/nx-openapi-codegen/compare/v0.0.10...v0.0.11) (2024-12-24)
 
 

@@ -1,5 +1,13 @@
 
 
+## [0.0.14](https://github.com/dankreiger/nx-openapi-codegen/compare/v0.0.13...v0.0.14) (2024-12-25)
+
+
+### Bug Fixes
+
+* add kotlin and swift ([4d6e4a6](https://github.com/dankreiger/nx-openapi-codegen/commit/4d6e4a62bf7b01cfe18f90df1ea7cc837a323916))
+* add kotlin and swift ([23d95ce](https://github.com/dankreiger/nx-openapi-codegen/commit/23d95ce790a949755afc62f393e8533b17231229))
+
 ## [0.0.13](https://github.com/dankreiger/nx-openapi-codegen/compare/v0.0.12...v0.0.13) (2024-12-25)
 
 ## [0.0.12](https://github.com/dankreiger/nx-openapi-codegen/compare/v0.0.11...v0.0.12) (2024-12-25)

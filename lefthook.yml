@@ -1,6 +1,8 @@
 pre-commit:
   parallel: true
   commands:
+    lint:
+      run: bun check:fix
     format:
       run: bunx sort-package-json && bun check:fix
       stage_fixed: true
@@ -16,4 +18,3 @@ post-merge:
   install-deps-postmerge:
     tags: frontend
     run: bunx install-deps-postmerge
-

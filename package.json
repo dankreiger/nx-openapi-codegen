@@ -14,9 +14,7 @@
 	"type": "module",
 	"module": "src/index.ts",
 	"bin": "src/index.ts",
-	"files": [
-		"src"
-	],
+	"files": ["src"],
 	"scripts": {
 		"check": "bunx biome check",
 		"check:fix": "bunx biome check --write",

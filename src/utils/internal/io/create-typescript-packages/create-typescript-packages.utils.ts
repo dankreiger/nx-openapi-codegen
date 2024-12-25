@@ -19,10 +19,13 @@ import { Logger } from "../logger/index.ts";
 import { updatePackageJson } from "../update-package-json/index.ts";
 import { updateTsconfigJson } from "../update-tsconfig-json/index.ts";
 
-export async function createPackages(config: MonorepoConfig) {
-	for (const folder of config.selectedPackages) {
+export async function createTypescriptPackages(config: MonorepoConfig) {
+	if (!config.byLanguage.typescript) {
+		throw new Error("Typescript language not found in config");
+	}
+	for (const folder of config.selectedTypescriptSdks) {
 		const PACKAGE_NAME = `${config.npmOrgScope}/${folder}` as const;
-		const DIRECTORY = `${config.packagesBaseDirPath}/typescript/${folder}`;
+		const DIRECTORY = `${config.byLanguage.typescript.packagesDirectoryPath}/${folder}`;
 		console.log(
 			chalk.blue(
 				`\n⚡ Generating library for: ${chalk.bold.white(folder)} with prefix: ${chalk.bold.white(config.githubOrgName)}\n`,

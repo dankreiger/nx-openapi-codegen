@@ -1,6 +1,6 @@
 export * from "./check-bun-installation/index.ts";
 export * from "./create-codegen-configs/index.ts";
-export * from "./create-packages/index.ts";
+export * from "./create-typescript-packages/index.ts";
 export * from "./create-workspace/index.ts";
 export * from "./logger/index.ts";
 export * from "./repair-files/index.ts";

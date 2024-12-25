@@ -1,11 +1,41 @@
 import { mkdir, writeFile } from "node:fs/promises";
+import type { ReadonlyDeep } from "type-fest";
 import yaml from "yaml";
 import { BUN_VERSION } from "../../../../../constants/index.ts";
 import type { MonorepoConfig } from "../../../../../schemas/index.ts";
+import type { HttpsJsonSchemastoreOrgGithubActionJson } from "../../../../../types/github-action.d.ts";
+import type { HttpsJsonSchemastoreOrgGithubWorkflowJson } from "../../../../../types/github-workflow.d.ts";
 
-export async function createWorkspaceGithubWorkflows(_: MonorepoConfig) {
+type GithubWorkflowName = "main" | "pull-request" | "update-models";
+type GithubWorkflowNameString<
+	T extends GithubWorkflowName = GithubWorkflowName,
+> = `${T}.yml`;
+type GithubWorkflow<T extends GithubWorkflowName = GithubWorkflowName> =
+	ReadonlyDeep<
+		Record<
+			GithubWorkflowNameString<T>,
+			Omit<HttpsJsonSchemastoreOrgGithubWorkflowJson, "name"> & {
+				readonly name: T;
+			}
+		>
+	>;
+
+type GithubActionName =
+	| "prepare-authorized-environment"
+	| "bun-install-dependencies";
+type GithubActionNameString<T extends GithubActionName = GithubActionName> =
+	`${T}/action.yml`;
+type GithubAction<T extends GithubActionName = GithubActionName> = ReadonlyDeep<
+	Record<GithubActionNameString<T>, HttpsJsonSchemastoreOrgGithubActionJson>
+>;
+
+export async function createWorkspaceGithubWorkflows(config: MonorepoConfig) {
 	const workflowsDir = ".github/workflows";
 	const actionsDir = ".github/actions";
+	const CURRENT_NODE_VERSION = (await Bun.$`node --version`.text())
+		.trim()
+		.replace("v", "")
+		.replace("\n", "");
 
 	// Ensure directories exist
 	await mkdir(workflowsDir, { recursive: true });
@@ -16,11 +46,33 @@ export async function createWorkspaceGithubWorkflows(_: MonorepoConfig) {
 
 	// Define workflows in JSON
 	const workflows = {
+		"main.yml": {
+			name: "main",
+			on: {
+				push: {
+					branches: ["main"],
+				},
+			},
+			jobs: {
+				lint: {
+					"runs-on": "ubuntu-latest",
+					steps: [
+						{ uses: "actions/checkout@v4" },
+						{
+							name: "Prepare Environment",
+							uses: "./.github/actions/prepare-authorized-environment",
+							with: { token: "${{ secrets.GITHUB_TOKEN }}" },
+						},
+					],
+				},
+			},
+		},
 		"pull-request.yml": {
+			name: "pull-request",
 			on: ["pull_request"],
 			jobs: {
 				lint: {
-					"runs-on": "${{ vars.DEFAULT_RUNNER }}",
+					"runs-on": "ubuntu-latest",
 					steps: [
 						{ uses: "actions/checkout@v4" },
 						{
@@ -32,7 +84,7 @@ export async function createWorkspaceGithubWorkflows(_: MonorepoConfig) {
 					],
 				},
 				generate: {
-					"runs-on": "${{ vars.DEFAULT_RUNNER }}",
+					"runs-on": "ubuntu-latest",
 					steps: [
 						{ uses: "actions/checkout@v4" },
 						{
@@ -44,7 +96,7 @@ export async function createWorkspaceGithubWorkflows(_: MonorepoConfig) {
 					],
 				},
 				test: {
-					"runs-on": "${{ vars.DEFAULT_RUNNER }}",
+					"runs-on": "ubuntu-latest",
 					steps: [
 						{ uses: "actions/checkout@v4" },
 						{
@@ -56,7 +108,7 @@ export async function createWorkspaceGithubWorkflows(_: MonorepoConfig) {
 					],
 				},
 				docs: {
-					"runs-on": "${{ vars.DEFAULT_RUNNER }}",
+					"runs-on": "ubuntu-latest",
 					steps: [
 						{ uses: "actions/checkout@v4" },
 						{
@@ -70,6 +122,7 @@ export async function createWorkspaceGithubWorkflows(_: MonorepoConfig) {
 			},
 		},
 		"update-models.yml": {
+			name: "update-models",
 			on: {
 				schedule: [{ cron: "30 6,14 * * 1-5" }],
 				workflow_dispatch: {},
@@ -86,13 +139,9 @@ export async function createWorkspaceGithubWorkflows(_: MonorepoConfig) {
 			},
 			jobs: {
 				update_models: {
-					"runs-on": "${{ vars.DEFAULT_RUNNER }}",
+					"runs-on": "ubuntu-latest",
 					steps: [
 						{ uses: "actions/checkout@v4", with: { "fetch-depth": 0 } },
-						{
-							name: "Install Rust Toolchain",
-							uses: "dtolnay/rust-toolchain@stable",
-						},
 						{
 							name: "Prepare Authorized Environment",
 							uses: "./.github/actions/prepare-authorized-environment",
@@ -101,10 +150,6 @@ export async function createWorkspaceGithubWorkflows(_: MonorepoConfig) {
 						{
 							name: "Generate Models",
 							run: "bun run generate",
-							env: {
-								UNLEASH_CLIENT_TOKEN: "${{ secrets.UNLEASH_CLIENT_TOKEN }}",
-								UNLEASH_FRONTEND_TOKEN: "${{ secrets.UNLEASH_FRONTEND_TOKEN }}",
-							},
 						},
 						{
 							name: "Create Pull Request",
@@ -128,7 +173,7 @@ export async function createWorkspaceGithubWorkflows(_: MonorepoConfig) {
 				},
 			},
 		},
-	};
+	} as const satisfies GithubWorkflow;
 
 	// Define composite actions in JSON
 	const actions = {
@@ -169,12 +214,12 @@ export async function createWorkspaceGithubWorkflows(_: MonorepoConfig) {
 				using: "composite",
 				steps: [
 					{
-						name: "Use Node.js 20.15.0",
+						name: `"Use Node.js ${CURRENT_NODE_VERSION}"`,
 						uses: "actions/setup-node@v4",
 						with: {
-							"node-version": "20.15.0",
+							"node-version": `${CURRENT_NODE_VERSION}`,
 							"registry-url": "https://npm.pkg.github.com",
-							scope: "${config.npmOrgScope}",
+							scope: `${config.npmOrgScope}`,
 							token: "${{ inputs.token }}",
 						},
 					},
@@ -196,7 +241,7 @@ git config user.email 'github-actions[bot]@users.noreply.github.com'`,
 				],
 			},
 		},
-	};
+	} as const satisfies GithubAction;
 
 	// Write workflows as YAML
 	for (const [filename, content] of Object.entries(workflows)) {

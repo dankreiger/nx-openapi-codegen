@@ -4,6 +4,7 @@ export * from "./existing-file-path/index.ts";
 export * from "./file-path/index.ts";
 export * from "./github-org-or-repo-name/index.ts";
 export * from "./kubb/index.ts";
+export * from "./monorepo-config-by-language/index.ts";
 export * from "./monorepo-config/index.ts";
 export * from "./openapi-url/index.ts";
 export * from "./package-script-name/index.ts";

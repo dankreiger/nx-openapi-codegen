@@ -95,32 +95,8 @@ console.log(\`Committing to \${currentBranch}\`);`,
 		return /* ts */ `${"#!/usr/bin/env bun"}
 			import { replaceInFile } from 'replace-in-file'
 		
-			const srcTsFiles = new Bun.Glob("${config.packagesBaseDirPath}/**/src/**/*.ts");
-			const srcTsFolders = new Bun.Glob("${config.packagesBaseDirPath}/**/src/**/");
-			const distDirs = new Bun.Glob("${config.packagesBaseDirPath}/**/dist");
-		
-			console.log("🧹 Cleaning up generated files...");
-			const files: string[] = [];
-			for await (const file of srcTsFiles.scan(".")) {
-				if (!file.endsWith("index.ts")) files.push(file);
-			}
-			Bun.spawnSync(["bunx", "rimraf", ...files], { stdout: "inherit" });
-		
-			const folders: string[] = [];
-			for await (const folder of srcTsFolders.scan(".")) {
-				folders.push(folder);
-			}
-			Bun.spawnSync(["bunx", "rimraf", ...folders], { stdout: "inherit" });
-		
-			const dists: string[] = [];
-			for await (const dirs of distDirs.scan(".")) {
-				dists.push(dirs);
-			}
-			Bun.spawnSync(["bunx", "rimraf", ...dists], { stdout: "inherit" });
-		
-			Bun.spawnSync(["bun", "install"], { stdout: "inherit" });
 			${
-				config.sdkLanguages.includes("swift")
+				config.byLanguage.swift
 					? `Bun.spawnSync([
 							"bunx",
 							"@openapitools/openapi-generator-cli",
@@ -130,16 +106,16 @@ console.log(\`Committing to \${currentBranch}\`);`,
 							"-g",
 							"swift5",
 							"-o",
-							"./${config.packagesBaseDirPath}/swift",
+							"./${config.byLanguage.swift.packagesDirectoryPath}",
 							"-c", 
-							"${config.codegenConfigsDir}/openapitools/openapi-generator-config.json",
+							"${config.byLanguage.swift.codegenConfigsDirectoryPath}/openapi-generator-config-swift.json",
 							"--skip-validate-spec",
 							"--additional-properties=responseAs=AsyncAwait,swift5UseSPMFileStructure=true,projectName=${OneWordLowerCaseGithubOrgName},packageName=${OneWordLowerCaseGithubOrgName},swiftPackagePath=${OneWordLowerCaseGithubOrgName},useGitHub=true"])`
 					: ""
 			}
 
 			${
-				config.sdkLanguages.includes("kotlin")
+				config.byLanguage.kotlin
 					? `Bun.spawnSync([
 				"bunx",
 				"@openapitools/openapi-generator-cli",
@@ -149,23 +125,60 @@ console.log(\`Committing to \${currentBranch}\`);`,
 				"-g",
 				"kotlin",
 				"-o",
-				"./${config.packagesBaseDirPath}/kotlin",
+				"./${config.byLanguage.kotlin.packagesDirectoryPath}",
 				"-c",
-				"${config.codegenConfigsDir}/openapitools/openapi-generator-config.json",
+				"${config.byLanguage.kotlin.codegenConfigsDirectoryPath}/openapi-generator-config-kotlin.json",
 				"--skip-validate-spec",
 				"--additional-properties=useCoroutines=true,library=jvm-retrofit2,serializationLibrary=gson,artifactVersion=${CURRENT_VERSION},publishToGitHubPackages=true",
 			])`
 					: ""
 			}
 			
-		
-			${config.sdkLanguages.includes("typescript") && config.selectedPackages.includes("rtk-query") ? `Bun.spawnSync(["bunx", "@rtk-query/codegen-openapi", "${config.codegenConfigsDir}/rtk-query.config.json"], { stdout: "inherit" });` : ""}
-			${config.sdkLanguages.includes("typescript") ? `Bun.spawnSync(["bunx", "kubb", "generate", "--config", "${`${config.codegenConfigsDir}/kubb.config.ts`}"], { stdout: "inherit" });` : ""}
-			// Import from faker-random inside of msw-random
-			${config.selectedPackages.includes("msw-random") ? /* ts */ `await replaceInFile({ files: '${config.packagesBaseDirPath}/typescript/msw-random/src/*.ts', from: ['faker-constant', '(data))', '() {'], to: ['faker-random', '())', '(data?: any) {'] })` : ""}
-			${config.selectedPackages.includes("msw-constant") || config.selectedPackages.includes("msw-random") ? /*ts*/ `await replaceInFile({ files: '${config.packagesBaseDirPath}/typescript/msw-*/src/*.ts', from: ['(data))'], to: ['())', '(data?: any) {'] })` : ""}
+
+
+
+
+					${
+						config.byLanguage.typescript
+							? /* ts */ `	
+				const srcTsFiles = new Bun.Glob("${config.byLanguage.typescript.packagesDirectoryPath}/**/src/**/*.ts");
+				const srcTsFolders = new Bun.Glob("${config.byLanguage.typescript.packagesDirectoryPath}/**/src/**/");
+				const distDirs = new Bun.Glob("${config.byLanguage.typescript.packagesDirectoryPath}/**/dist");
 			
-			Bun.spawnSync(["bunx", "biome", "check", "--write", "--unsafe"], { stdout: "inherit" });
+				console.log("🧹 Cleaning up generated files...");
+				const files: string[] = [];
+				for await (const file of srcTsFiles.scan(".")) {
+					if (!file.endsWith("index.ts")) files.push(file);
+				}
+				Bun.spawnSync(["bunx", "rimraf", ...files], { stdout: "inherit" });
+			
+				const folders: string[] = [];
+				for await (const folder of srcTsFolders.scan(".")) {
+					folders.push(folder);
+				}
+				Bun.spawnSync(["bunx", "rimraf", ...folders], { stdout: "inherit" });
+			
+				const dists: string[] = [];
+				for await (const dirs of distDirs.scan(".")) {
+					dists.push(dirs);
+				}
+				Bun.spawnSync(["bunx", "rimraf", ...dists], { stdout: "inherit" });
+			
+				Bun.spawnSync(["bun", "install"], { stdout: "inherit" });
+				
+			
+				${config.selectedTypescriptSdks.includes("rtk-query") ? `Bun.spawnSync(["bunx", "@rtk-query/codegen-openapi", "${config.byLanguage.typescript.codegenConfigsDirectoryPath}/rtk-query.config.json"], { stdout: "inherit" });` : ""}
+				Bun.spawnSync(["bunx", "kubb", "generate", "--config", "${`${config.byLanguage.typescript.codegenConfigsDirectoryPath}/kubb.config.ts`}"], { stdout: "inherit" });
+				
+				// Import from faker-random inside of msw-random
+				${config.selectedTypescriptSdks.includes("msw-random") ? /* ts */ `await replaceInFile({ files: '${config.byLanguage.typescript.packagesDirectoryPath}/msw-random/src/*.ts', from: ['faker-constant', '(data))', '() {'], to: ['faker-random', '())', '(data?: any) {'] })` : ""}
+				${config.selectedTypescriptSdks.includes("msw-constant") || config.selectedTypescriptSdks.includes("msw-random") ? /*ts*/ `await replaceInFile({ files: '${config.byLanguage.typescript.packagesDirectoryPath}/msw-*/src/*.ts', from: ['(data))'], to: ['())', '(data?: any) {'] })` : ""}
+				
+				Bun.spawnSync(["bunx", "biome", "check", "--write", "--unsafe"], { stdout: "inherit" });
+							`
+							: ""
+					}
+		
 		`;
 	},
 

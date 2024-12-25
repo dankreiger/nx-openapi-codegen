@@ -10,7 +10,12 @@ import {
 } from "../../../../../schemas/index.ts";
 
 export async function generateKubbConfig(config: MonorepoConfig) {
-	const kubbPlugins = getKubbPlugins(config.selectedPackages);
+	if (!config.byLanguage.typescript) {
+		throw new Error(
+			"Typescript packages directory is not set, cannot create Kubb codegen config. This probably means you didn't select typescript as a language to generate SDKs for.",
+		);
+	}
+	const kubbPlugins = getKubbPlugins(config.selectedTypescriptSdks);
 
 	const plugins = kubbPlugins.map(
 		(r) =>
@@ -18,7 +23,7 @@ export async function generateKubbConfig(config: MonorepoConfig) {
 	);
 
 	return await Bun.write(
-		`${config.codegenConfigsDir}/kubb.config.ts`,
+		`${config.byLanguage.typescript.codegenConfigsDirectoryPath}/kubb.config.ts`,
 		/*ts*/ `${"#!/usr/bin/env bun"}    
 		import { defineConfig } from "@kubb/core";
 
@@ -33,7 +38,7 @@ export async function generateKubbConfig(config: MonorepoConfig) {
 						path: '${config.openapiUrlOrFilePath}',
 					},
 					output: {
-						path: '${config.packagesBaseDirPath}',
+						path: '${config.byLanguage.typescript.packagesDirectoryPath}',
 						clean: false,
 					},
 					plugins: [${plugins}],
@@ -105,8 +110,10 @@ const getKubbSpecificOpts = (packageName: AvailablePackages) => {
 	}
 };
 
-const getKubbPlugins = (selectedPackages: readonly AvailablePackages[]) => {
-	const selectedPackagesSet = new Set(selectedPackages);
+const getKubbPlugins = (
+	selectedTypescriptSdks: readonly AvailablePackages[],
+) => {
+	const selectedPackagesSet = new Set(selectedTypescriptSdks);
 	const REQUIRED_PKGS = new Set([
 		"types",
 		"oas",
@@ -134,7 +141,7 @@ const getKubbPlugins = (selectedPackages: readonly AvailablePackages[]) => {
 					pluginInfo.pluginFnNameString,
 				),
 				output: {
-					path: `./typescript/${packageName}/src`,
+					path: `./${packageName}/src`,
 				},
 				...getKubbSpecificOpts(packageName),
 			} as const),

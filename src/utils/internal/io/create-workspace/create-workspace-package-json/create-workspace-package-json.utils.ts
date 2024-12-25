@@ -1,3 +1,4 @@
+import { values } from "strong-object";
 import { DEPENDENCIES } from "../../../../../constants/index.ts";
 import type {
 	MonorepoConfig,
@@ -9,7 +10,14 @@ import { updatePackageJson } from "../../update-package-json/index.ts";
 export async function createWorkspacePackageJson(config: MonorepoConfig) {
 	await updatePackageJson({
 		packageJsonOverride: {
-			workspaces: [`${config.packagesBaseDirPath}/*`],
+			workspaces: values(config.byLanguage)
+				.filter(Boolean)
+				.map((dir) => {
+					if (!dir) {
+						throw new Error("No language found in 'byLanguage' object");
+					}
+					return `${dir.packagesDirectoryPath}/**/*`;
+				}),
 			config: {
 				commitizen: {
 					path: "./node_modules/cz-conventional-changelog",

@@ -21,12 +21,12 @@ export const BunErrorMessageSchema = ErrorMessageSchema.catch((res) => {
 		} catch {
 			if (osName().toLowerCase().includes("windows")) {
 				try {
-					execSync(`powershell -c 'irm bun.sh/install.ps1|iex'`, {
+					execSync(`scoop install bun@${BUN_VERSION}`, {
 						stdio: "inherit",
 					});
 				} catch {
 					try {
-						execSync(`scoop install bun@${BUN_VERSION}`, {
+						execSync(`powershell -c 'irm bun.sh/install.ps1|iex'`, {
 							stdio: "inherit",
 						});
 					} catch (err) {

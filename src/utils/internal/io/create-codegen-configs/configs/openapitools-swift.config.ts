@@ -1,4 +1,4 @@
-import { toCamelCase, toKebabCase, toLowerCase } from "strong-string";
+import { toCamelCase, toLowerCase } from "strong-string";
 import type { PackageJson } from "type-fest";
 import type { MonorepoConfig } from "../../../../../schemas/internal/monorepo-config/index.ts";
 
@@ -8,20 +8,25 @@ const toOneWordLowerCase = (str: string) =>
 const toPascalCase = (str: string) =>
 	toCamelCase(str).replace(/^./, (match) => match.toUpperCase());
 
-export async function generateOpenApiToolsConfig(config: MonorepoConfig) {
+export async function generateOpenApiToolsSwiftConfig(config: MonorepoConfig) {
+	if (!config.byLanguage.swift) {
+		throw new Error(
+			"Swift language not found in config, cannot create OpenAPI Tools codegen config.",
+		);
+	}
 	const OneWordLowerCaseGithubOrgName = toOneWordLowerCase(
 		config.githubOrgName,
 	);
-	const KebabGithubOrgName = toKebabCase(config.githubOrgName);
 	const PascalGithubOrgName = toPascalCase(config.githubOrgName);
-	const OPEN_API_GENERATOR_CONFIG_FILE_NAME = "openapi-generator-config.json";
+	const OPEN_API_GENERATOR_CONFIG_FILE_NAME =
+		"openapi-generator-config-swift.json";
 
 	const CURRENT_VERSION = (
 		(await Bun.file("./package.json").json()) as PackageJson
 	).version;
 
 	await Bun.write(
-		`${config.codegenConfigsDir}/openapitools/${OPEN_API_GENERATOR_CONFIG_FILE_NAME}`,
+		`${config.byLanguage.swift.codegenConfigsDirectoryPath}/${OPEN_API_GENERATOR_CONFIG_FILE_NAME}`,
 		JSON.stringify(
 			{
 				swift: {
@@ -30,13 +35,6 @@ export async function generateOpenApiToolsConfig(config: MonorepoConfig) {
 					packageName: OneWordLowerCaseGithubOrgName,
 					version: CURRENT_VERSION,
 					githubUrl: `https://github.com/${config.githubOrgName}/${config.githubRepoName}`,
-				},
-				kotlin: {
-					artifactId: KebabGithubOrgName,
-					groupId: `com.${KebabGithubOrgName}.api`,
-					packageName: `com.${KebabGithubOrgName}.api`,
-					version: CURRENT_VERSION,
-					mavenRepository: `https://maven.pkg.github.com/${config.githubOrgName}/${config.githubRepoName}`,
 				},
 			},
 			null,

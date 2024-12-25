@@ -1,8 +1,5 @@
 import { execSync } from "node:child_process";
-import {
-	DEFAULT_OPENAPI_URL,
-	DEFAULT_PACKAGES_BASE_DIR_PATH,
-} from "../constants/index.ts";
+import { DEFAULT_OPENAPI_URL } from "../constants/index.ts";
 import {
 	AvailablePackagesSchema,
 	MonorepoConfigSchema,
@@ -14,7 +11,7 @@ import {
 	getGithubNameByType,
 	getOpenapiUrlOrFilePath,
 	getSdkLanguages,
-	getSelectedPackages,
+	getSelectedTypescriptSdks,
 } from "./internal/index.ts";
 
 export async function getMonorepoConfig() {
@@ -28,8 +25,7 @@ export async function getMonorepoConfig() {
 			githubRepoName: getGithubNameByType({ nameType: "repo" }),
 			openapiUrlOrFilePath: DEFAULT_OPENAPI_URL,
 			sdkLanguages: SdkLanguageSchema.options,
-			packagesBaseDirPath: DEFAULT_PACKAGES_BASE_DIR_PATH,
-			selectedPackages: AvailablePackagesSchema.options,
+			selectedTypescriptSdks: AvailablePackagesSchema.options,
 		} as const);
 	}
 
@@ -44,10 +40,8 @@ export async function getMonorepoConfig() {
 		githubRepoName: await getGithubName({ nameType: "repo" }),
 		openapiUrlOrFilePath: await getOpenapiUrlOrFilePath(),
 		sdkLanguages: await getSdkLanguagesAsync(),
-		// packagesBaseDirPath: await getPackagesBaseDirPath(),
-		packagesBaseDirPath: "packages",
 		...(sdkLanguages.includes("typescript")
-			? { selectedPackages: await getSelectedPackages() }
+			? { selectedTypescriptSdks: await getSelectedTypescriptSdks() }
 			: {}),
 	} as const);
 

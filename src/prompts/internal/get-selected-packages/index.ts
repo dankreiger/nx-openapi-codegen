@@ -1,1 +1,1 @@
-export { getSelectedPackages } from "./get-selected-packages.prompts.ts";
+export { getSelectedTypescriptSdks } from "./get-selected-packages.prompts.ts";

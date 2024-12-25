@@ -1,6 +1,6 @@
 {
 	"name": "nx-openapi-codegen",
-	"version": "0.0.17",
+	"version": "0.0.18",
 	"homepage": "https://github.com/dankreiger/nx-openapi-codegen",
 	"bugs": {
 		"url": "https://github.com/dankreiger/nx-openapi-codegen/issues"

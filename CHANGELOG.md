@@ -1,5 +1,12 @@
 
 
+## [0.0.16](https://github.com/dankreiger/nx-openapi-codegen/compare/v0.0.15...v0.0.16) (2024-12-25)
+
+
+### Bug Fixes
+
+* update nx config, scripts, and gh actions ([cb33c5f](https://github.com/dankreiger/nx-openapi-codegen/commit/cb33c5f5ae6ea8da309515149455fa4e1a55c93b))
+
 ## [0.0.15](https://github.com/dankreiger/nx-openapi-codegen/compare/v0.0.14...v0.0.15) (2024-12-25)
 
 

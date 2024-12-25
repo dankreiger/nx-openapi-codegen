@@ -156,7 +156,6 @@ export async function createWorkspaceGithubWorkflows(_: MonorepoConfig) {
 			name: "update-models",
 			on: {
 				schedule: [{ cron: "30 6,14 * * 1-5" }],
-				workflow_dispatch: {},
 			},
 			env: {
 				GH_TOKEN: "${{ github.token }}",

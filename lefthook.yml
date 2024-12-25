@@ -3,6 +3,7 @@ pre-commit:
   commands:
     lint:
       run: bun check:fix
+      stage_fixed: true
     format:
       run: bunx sort-package-json && bun check:fix
       stage_fixed: true

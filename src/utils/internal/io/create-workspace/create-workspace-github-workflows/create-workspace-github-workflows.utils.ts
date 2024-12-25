@@ -182,6 +182,10 @@ export async function createWorkspaceGithubWorkflows(_: MonorepoConfig) {
 							run: "bun run generate",
 						},
 						{
+							name: "Notice",
+							run: "echo 'Notice: If you have issues with the Create Pull Request, follow these permissions steps: https://stackoverflow.com/questions/72376229/github-actions-is-not-permitted-to-create-or-approve-pull-requests-createpullre'",
+						},
+						{
 							name: "Create Pull Request",
 							id: "cpr",
 							uses: "peter-evans/create-pull-request@v6",

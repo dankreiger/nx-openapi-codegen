@@ -1,13 +1,54 @@
 import { values } from "strong-object";
-import { DEPENDENCIES } from "../../../../../constants/index.ts";
+import {
+	DEPENDENCIES,
+	WORKSPACE_PACKAGE_JSON_SCRIPTS,
+} from "../../../../../constants/index.js";
 import type {
 	MonorepoConfig,
-	PackageScriptName,
-} from "../../../../../schemas/index.ts";
-import { getGithubRepoUrl } from "../../../mappers/get-github-repo-url/index.ts";
-import { updatePackageJson } from "../../update-package-json/index.ts";
+	WorkspaceScriptName,
+} from "../../../../../schemas/index.js";
+import {
+	type WorkspacePackageJsonScriptConfig,
+	type WorkspacePackageJsonScriptValue,
+	WorkspacePackageJsonScriptValueSchema,
+} from "../../../../../schemas/internal/workspace-package-json-script-config/workspace-package-json-script-config.schemas.js";
+import { getGithubRepoUrl } from "../../../mappers/get-github-repo-url/index.js";
+import { updatePackageJson } from "../../update-package-json/index.js";
 
-export async function createWorkspacePackageJson(config: MonorepoConfig) {
+const buildScripts = (
+	scripts: ReadonlyArray<WorkspacePackageJsonScriptConfig>,
+) =>
+	scripts.reduce(
+		(acc, cur) => {
+			acc[cur.name] = WorkspacePackageJsonScriptValueSchema.parse(cur);
+			return acc;
+		},
+		{} as Record<WorkspaceScriptName, WorkspacePackageJsonScriptValue>,
+	);
+
+const buildWorkspaces = (config: MonorepoConfig): string[] => {
+	const directories = values(config.byLanguage).filter(Boolean);
+
+	if (directories.length === 0) {
+		throw new Error(
+			"No valid language directories found in 'byLanguage' object",
+		);
+	}
+
+	return directories.filter(Boolean).map((dir) => {
+		if (!dir?.packagesDirectoryPath) {
+			throw new Error(
+				"No packages directory path found in 'byLanguage' object",
+			);
+		}
+
+		return `${dir.packagesDirectoryPath}/**/*`;
+	});
+};
+
+export async function createWorkspacePackageJson(
+	config: MonorepoConfig,
+): Promise<void> {
 	await updatePackageJson({
 		packageJsonOverride: {
 			config: {
@@ -29,41 +70,9 @@ export async function createWorkspacePackageJson(config: MonorepoConfig) {
 				type: "git",
 				url: getGithubRepoUrl(config),
 			},
-			scripts: {
-				boom: "bun --bun ./tools/scripts/boom/index.ts",
-				"boom:refresh": "bun --bun ./tools/scripts/boom/refresh.ts",
-				build: "bun ./tools/scripts/build/index.ts",
-				// "bump:kotlin-version":
-				// 	"bun --bun ./tools/scripts/bump/kotlin-version.ts",
-				// "bump:swift-version": "bun --bun ./tools/scripts/bump/swift-version.ts",
-				commit: "cz",
-				"commit:protect": "bun --bun ./tools/scripts/commit/protect.ts",
-				docs: "bun --bun ./tools/scripts/docs/index.ts",
-				generate: "bun --bun ./tools/scripts/generate/index.ts",
-				"generate:refresh": "bun --bun ./tools/scripts/generate/refresh.ts",
-				lint: "bun --bun ./tools/scripts/lint/index.ts",
-				"local-registry:publish":
-					"bun ./tools/scripts/local-registry/publish.ts",
-				"local-registry:start":
-					"bun --bun ./tools/scripts/local-registry/start.ts",
-				"local-registry:stop":
-					"bun --bun ./tools/scripts/local-registry/stop.ts",
-				release: "bun --bun ./tools/scripts/release/index.ts",
-				"release:dry-run": "bun --bun ./tools/scripts/release/dry-run.ts",
-				"release:dry-run-first-time":
-					"bun --bun ./tools/scripts/release/dry-run-first-time.ts",
-				"release:first-time": "bun --bun ./tools/scripts/release/first-time.ts",
-				sort: "bun --bun ./tools/scripts/sort/index.ts",
-			} satisfies Readonly<Record<PackageScriptName, string>>,
+			scripts: buildScripts(WORKSPACE_PACKAGE_JSON_SCRIPTS),
 			version: "0.0.1",
-			workspaces: values(config.byLanguage)
-				.filter(Boolean)
-				.map((dir) => {
-					if (!dir) {
-						throw new Error("No language found in 'byLanguage' object");
-					}
-					return `${dir.packagesDirectoryPath}/**/*`;
-				}),
+			workspaces: buildWorkspaces(config),
 		},
 	});
 }

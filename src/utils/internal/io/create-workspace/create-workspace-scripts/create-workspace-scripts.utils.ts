@@ -1,36 +1,44 @@
 import { chmod, mkdir } from "node:fs/promises";
 import { dirname } from "node:path";
+import { entries, get } from "lodash-es";
+import { WORKSPACE_SCRIPTS_BASE_DIR_BY_LANG as BASE_DIR_BY_LANG } from "../../../../../constants/index.ts";
+import { WORKSPACE_SCRIPT_FILES } from "../../../../../constants/workspace-script-files/index.ts";
 import {
-	WORKSPACE_SCRIPTS_BASE_DIR as BASE_DIR,
-	SCRIPT_DIRECTORIES,
-	WORKSPACE_SCRIPT_FILES as SCRIPT_FILES,
-} from "../../../../../constants/index.ts";
-import type { MonorepoConfig } from "../../../../../schemas/index.ts";
+	type MonorepoConfig,
+	SdkLanguageSchema,
+} from "../../../../../schemas/index.ts";
 import { Logger } from "../../logger/logger.utils.ts";
 
 export async function createWorkspaceScripts(config: MonorepoConfig) {
 	// Define all script directories in alphabetical order
-
-	async function createFile(filepath: string, content: string) {
+	async function createFile(
+		input: [filepath: string, content: (c: MonorepoConfig) => Promise<string>],
+	) {
+		const [filepath, content] = input;
 		await mkdir(dirname(filepath), { recursive: true });
-		await Bun.write(filepath, content);
+		await Bun.write(filepath, await content(config));
 		await chmod(filepath, 0o755); // Make executable
 	}
 
-	// Create directories
 	await Promise.all(
-		SCRIPT_DIRECTORIES.map((dir) =>
-			mkdir(`./${BASE_DIR}/${dir}`, { recursive: true }),
+		SdkLanguageSchema.options.map((lang) =>
+			mkdir(`./${get(BASE_DIR_BY_LANG, lang)}`, { recursive: true }),
+		),
+	);
+	// Create .gitkeep file in top level of BASE_DIR_BY_LANG
+	await Promise.all(
+		SdkLanguageSchema.options.map((lang) =>
+			createFile([
+				`./${get(BASE_DIR_BY_LANG, lang)}/../.gitkeep`,
+				() => Promise.resolve(""),
+			]),
 		),
 	);
 
-	// Create .gitkeep file in top level of BASE_DIR
-	await createFile(`./${BASE_DIR}/../.gitkeep`, "");
-
 	// Create all files
 	await Promise.all(
-		Object.entries(SCRIPT_FILES).map(async ([filepath, getConfig]) =>
-			createFile(filepath, await getConfig(config)),
+		SdkLanguageSchema.options.map((lang) =>
+			entries(get(WORKSPACE_SCRIPT_FILES, lang)).map(createFile),
 		),
 	);
 

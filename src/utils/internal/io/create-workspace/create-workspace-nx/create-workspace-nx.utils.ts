@@ -5,7 +5,7 @@ export async function createWorkspaceNx(config: MonorepoConfig) {
 	await Bun.spawnSync(
 		[
 			"bunx",
-			"create-nx-workspace@20.2.2",
+			"create-nx-workspace@20.3.0",
 			config.githubRepoName,
 			"--preset=ts",
 			"--formatter=none",

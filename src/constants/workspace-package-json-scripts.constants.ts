@@ -1,0 +1,30 @@
+import type { WorkspacePackageJsonScriptConfig } from "../schemas/index.ts";
+
+export const WORKSPACE_PACKAGE_JSON_SCRIPTS = [
+	{ name: "kotlin:generate" },
+	{ name: "kotlin:release" },
+	{ name: "kotlin:publish" },
+	{ name: "swift:generate" },
+	{ name: "swift:release" },
+	{ name: "swift:publish" },
+	{ name: "typescript:boom" },
+	{ name: "typescript:boom:refresh", isIndexFile: false },
+	{ name: "typescript:build", useBun: false },
+	{ name: "typescript:commit", customScript: "cz", useBun: false },
+	{ name: "typescript:commit:protect", isIndexFile: false },
+	{ name: "typescript:docs" },
+	{ name: "typescript:generate" },
+	{ name: "typescript:generate:refresh", isIndexFile: false },
+	{ name: "typescript:lint" },
+	{ name: "typescript:local-registry:publish", isIndexFile: false },
+	{ name: "typescript:local-registry:start", isIndexFile: false },
+	{ name: "typescript:local-registry:stop", isIndexFile: false },
+	{ name: "typescript:release" },
+	{ name: "typescript:release:dry-run", isIndexFile: false },
+	{ name: "typescript:release:dry-run-first-time", isIndexFile: false },
+	{
+		name: "typescript:release:first-time",
+		isIndexFile: false,
+	},
+	{ name: "typescript:sort" },
+] as const satisfies ReadonlyArray<WorkspacePackageJsonScriptConfig>;

@@ -21,6 +21,11 @@ type FilePath = z.infer<typeof FilePathSchema>;
 /**
  * Function to validate a file path at runtime.
  */
-export function parseFilePath(input: string): FilePath {
-	return FilePathSchema.parse(input);
+export function parseFilePath(input: string, opts?: ParseFilePathOpts) {
+	const { transform = (output: FilePath) => output } = opts ?? {};
+	return FilePathSchema.transform(transform).parse(input);
 }
+
+type ParseFilePathOpts = {
+	readonly transform: <const R>(output: FilePath) => R;
+};

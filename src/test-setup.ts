@@ -1,6 +1,7 @@
 import { mock, spyOn } from "bun:test";
 
 mock.module("node:fs/promises", () => ({
+	appendFile: mock(),
 	chmod: mock(),
 	mkdir: mock(),
 	stat: mock(),

@@ -6,5 +6,6 @@ export * from "./logger/index.ts";
 export * from "./repair-files/index.ts";
 export * from "./run-codegen/index.ts";
 export * from "./setup-workspace/index.ts";
+export * from "./update-gitignore/index.ts";
 export * from "./update-package-json/index.ts";
 export * from "./update-tsconfig-json/index.ts";

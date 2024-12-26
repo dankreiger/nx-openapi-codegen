@@ -140,8 +140,8 @@ export async function createWorkspaceGithubWorkflows(_: MonorepoConfig) {
 							shell: "bash",
 						},
 						{
-							name: "Run release",
-							run: "bun run release",
+							name: "Release typescript packages",
+							run: "bun run typescript:release",
 							shell: "bash",
 							env: {
 								NODE_AUTH_TOKEN: "${{ secrets.GITHUB_TOKEN }}",
@@ -178,8 +178,16 @@ export async function createWorkspaceGithubWorkflows(_: MonorepoConfig) {
 							with: { branch: "main", token: "${{ secrets.GITHUB_TOKEN }}" },
 						},
 						{
-							name: "Generate Models",
-							run: "bun run generate",
+							name: "Generate Typescript Models",
+							run: "bun run typescript:generate",
+						},
+						{
+							name: "Generate Kotlin Models",
+							run: "bun run kotlin:generate",
+						},
+						{
+							name: "Generate Swift Models",
+							run: "bun run swift:generate",
 						},
 						{
 							name: "Notice",

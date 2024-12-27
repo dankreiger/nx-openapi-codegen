@@ -61,7 +61,7 @@ export async function createWorkspaceGithubWorkflows(_: MonorepoConfig) {
 							uses: "./.github/actions/prepare-authorized-environment",
 							with: { token: "${{ secrets.GITHUB_TOKEN }}" },
 						},
-						{ name: "Lint", run: "bun run lint" },
+						{ name: "Lint", run: "bun run typescript:lint" },
 					],
 				},
 				generate: {
@@ -73,19 +73,7 @@ export async function createWorkspaceGithubWorkflows(_: MonorepoConfig) {
 							uses: "./.github/actions/prepare-authorized-environment",
 							with: { token: "${{ secrets.GITHUB_TOKEN }}" },
 						},
-						{ name: "Generate Types", run: "bun run generate" },
-					],
-				},
-				test: {
-					"runs-on": "ubuntu-latest",
-					steps: [
-						{ uses: "actions/checkout@v4" },
-						{
-							name: "Prepare Environment",
-							uses: "./.github/actions/prepare-authorized-environment",
-							with: { token: "${{ secrets.GITHUB_TOKEN }}" },
-						},
-						{ name: "Run Tests", run: "bun run test" },
+						{ name: "Generate Types", run: "bun run typescript:generate" },
 					],
 				},
 				docs: {
@@ -97,7 +85,7 @@ export async function createWorkspaceGithubWorkflows(_: MonorepoConfig) {
 							uses: "./.github/actions/prepare-authorized-environment",
 							with: { token: "${{ secrets.GITHUB_TOKEN }}" },
 						},
-						{ name: "Build Packages and Docs", run: "bun run docs" },
+						{ name: "Build Packages and Docs", run: "bun run typescript:docs" },
 					],
 				},
 			},
@@ -136,7 +124,7 @@ export async function createWorkspaceGithubWorkflows(_: MonorepoConfig) {
 						},
 						{
 							name: "Build packages",
-							run: "bun run build",
+							run: "bun run typescript:build",
 							shell: "bash",
 						},
 						{

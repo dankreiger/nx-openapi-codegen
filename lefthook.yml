@@ -19,4 +19,4 @@ post-merge:
   commands:
     install-deps-postmerge:
       tags: frontend
-      run: bunx install-deps-postmerge
+      run: bun install

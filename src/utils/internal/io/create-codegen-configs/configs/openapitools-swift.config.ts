@@ -1,9 +1,7 @@
-import { toCamelCase, toLowerCase } from "strong-string";
+import { toCamelCase } from "strong-string";
 import type { PackageJson } from "type-fest";
 import type { MonorepoConfig } from "../../../../../schemas/internal/monorepo-config/index.ts";
-
-const toOneWordLowerCase = (str: string) =>
-	toLowerCase(str).replaceAll("-", "").replaceAll("_", "");
+import { toOneWordLowerCase } from "../../../mappers/index.ts";
 
 const toPascalCase = (str: string) =>
 	toCamelCase(str).replace(/^./, (match) => match.toUpperCase());

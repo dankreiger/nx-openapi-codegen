@@ -1,14 +1,12 @@
-import { write } from "bun";
-
 export async function createWorkspaceCommitConfig() {
-	await write(
+	await Bun.write(
 		".commitlintrc",
 		`{
-		extends: ["@commitlint/config-conventional"],
+		"extends": ["@commitlint/config-conventional"],
 	}`,
 	);
 
-	await write(
+	await Bun.write(
 		"./lefthook.json",
 		JSON.stringify(
 			{

@@ -1,4 +1,11 @@
+# Changelog
 
+## [0.0.22](https://github.com/dankreiger/nx-openapi-codegen/compare/v0.0.21...v0.0.22) (2024-12-30)
+
+
+### Bug Fixes
+
+* **deps:** update packages ([82ba5d8](https://github.com/dankreiger/nx-openapi-codegen/commit/82ba5d8ee7dcfe579e6459a168637dc50b85a773))
 
 ## [0.0.21](https://github.com/dankreiger/nx-openapi-codegen/compare/v0.0.20...v0.0.21) (2024-12-30)
 

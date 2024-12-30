@@ -1,5 +1,13 @@
 
 
+## [0.0.20](https://github.com/dankreiger/nx-openapi-codegen/compare/v0.0.19...v0.0.20) (2024-12-30)
+
+
+### Bug Fixes
+
+* add fix to commitlint typo ([834bb2c](https://github.com/dankreiger/nx-openapi-codegen/commit/834bb2c39c6236dd891bd2a5e2988eee6f9b0edb))
+* modularize scripts by programming language ([4e16552](https://github.com/dankreiger/nx-openapi-codegen/commit/4e16552b00039aba991dfd5b5a425390d91bd3ed))
+
 ## [0.0.19](https://github.com/dankreiger/nx-openapi-codegen/compare/v0.0.18...v0.0.19) (2024-12-25)
 
 ## [0.0.18](https://github.com/dankreiger/nx-openapi-codegen/compare/v0.0.17...v0.0.18) (2024-12-25)

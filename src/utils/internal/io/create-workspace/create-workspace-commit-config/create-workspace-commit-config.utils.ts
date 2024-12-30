@@ -10,6 +10,7 @@ export async function createWorkspaceCommitConfig() {
 		"./lefthook.json",
 		JSON.stringify(
 			{
+				$schema: "https://json.schemastore.org/lefthook.json",
 				"pre-commit": {
 					parallel: true,
 					commands: {
@@ -25,9 +26,11 @@ export async function createWorkspaceCommitConfig() {
 					},
 				},
 				"post-merge": {
-					"install-deps-postmerge": {
-						tags: "frontend",
-						run: "bunx install-deps-postmerge",
+					commands: {
+						"install-deps-postmerge": {
+							tags: "frontend",
+							run: "bunx install-deps-postmerge",
+						},
 					},
 				},
 			},

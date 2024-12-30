@@ -16,6 +16,7 @@ commit-msg:
     check-commits:
       run: bunx commitlint --edit
 post-merge:
-  install-deps-postmerge:
-    tags: frontend
-    run: bunx install-deps-postmerge
+  commands:
+    install-deps-postmerge:
+      tags: frontend
+      run: bunx install-deps-postmerge

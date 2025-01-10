@@ -1,5 +1,7 @@
 # Changelog
 
+## [0.0.23](https://github.com/dankreiger/nx-openapi-codegen/compare/v0.0.22...v0.0.23) (2025-01-10)
+
 ## [0.0.22](https://github.com/dankreiger/nx-openapi-codegen/compare/v0.0.21...v0.0.22) (2024-12-30)
 
 

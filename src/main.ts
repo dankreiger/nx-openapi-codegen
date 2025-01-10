@@ -11,15 +11,16 @@ import {
 
 (async () => {
 	try {
-		const config = await checkBunInstallation().then(getMonorepoConfig);
-
 		await pipe(
+			0,
+			checkBunInstallation,
+			getMonorepoConfig,
 			tap(setupWorkspace),
 			tap(runCodegen),
 			tap(async () =>
 				Logger.success("All selected libraries generated successfully!"),
 			),
-		)(config);
+		);
 	} catch (err) {
 		const shellError = ShellErrorOutputSchema.safeParse(err);
 		console.error(shellError.success ? shellError.data.stderr : err);

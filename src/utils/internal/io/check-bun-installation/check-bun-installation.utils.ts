@@ -17,9 +17,10 @@ export const checkBunInstallation = async () => {
 	try {
 		const bunCmd = getBunCommand();
 		const result = await execAsync(`${bunCmd} --version`);
-		return BunErrorMessageSchema.safeParse(result);
+		return BunErrorMessageSchema.parse(result);
 	} catch (err) {
-		Logger.error(`Failed to execute Bun command: ${err}`);
-		return BunErrorMessageSchema.safeParse(err);
+		Logger.error("Failed to execute Bun command");
+		console.error(err);
+		process.exit(1);
 	}
 };

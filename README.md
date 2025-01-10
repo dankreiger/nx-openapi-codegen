@@ -2,6 +2,12 @@
 
 A CLI tool to generate NX monorepo workspaces with OpenAPI code generation capabilities.
 
+## Usage
+
+```
+bunx nx-openapi-codegen
+```
+
 ## Features
 
 - Creates NX workspace with TypeScript setup

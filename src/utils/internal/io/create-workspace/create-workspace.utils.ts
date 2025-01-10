@@ -1,4 +1,4 @@
-import { pipeAsync as pipe, tapAsync as tap } from "async-toolbelt";
+import { pipe, tap } from "async-toolbelt";
 import type { MonorepoConfig } from "../../../../schemas/index.ts";
 import { Logger } from "../logger/logger.utils.ts";
 import { createWorkspaceBiomeConfig } from "./create-workspace-biome-config/index.ts";
@@ -14,7 +14,8 @@ import { createWorkspaceScripts } from "./create-workspace-scripts/index.ts";
 import { createWorkspaceVscodeConfig } from "./create-workspace-vscode-config/index.ts";
 
 export async function createWorkspace(config: MonorepoConfig) {
-	const res = await pipe(
+	return pipe(
+		config,
 		tap(createWorkspaceNx),
 		tap(createWorkspacePackageJson),
 		tap(createWorkspaceScripts),
@@ -26,8 +27,6 @@ export async function createWorkspace(config: MonorepoConfig) {
 		tap(createWorkspaceNxConfig),
 		tap(createWorkspaceGithubWorkflows),
 		tap(createWorkspaceGithubActions),
-	)(config);
-
-	Logger.success("Done creating workspace");
-	return res;
+		tap(() => Logger.success("Done creating workspace")),
+	);
 }

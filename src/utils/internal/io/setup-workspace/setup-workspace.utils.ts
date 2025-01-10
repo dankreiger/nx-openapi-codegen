@@ -1,4 +1,5 @@
-import { pipeAsync as pipe, tapAsync as tap } from "async-toolbelt";
+import { pipe, tap } from "async-toolbelt";
+import type { MonorepoConfig } from "../../../../schemas/index.ts";
 import {
 	Logger,
 	createCodegenConfig,
@@ -7,10 +8,12 @@ import {
 	updateTsconfigJsonBase,
 } from "../../index.ts";
 
-export const setupWorkspace = pipe(
-	tap(createWorkspace),
-	tap(createTypescriptPackages),
-	tap(createCodegenConfig),
-	tap(updateTsconfigJsonBase),
-	tap(async () => Logger.success("Done setting up workspace")),
-);
+export const setupWorkspace = (config: MonorepoConfig) =>
+	pipe(
+		config,
+		tap(createWorkspace),
+		tap(createTypescriptPackages),
+		tap(createCodegenConfig),
+		tap(updateTsconfigJsonBase),
+		tap(async () => Logger.success("Done setting up workspace")),
+	);

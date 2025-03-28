@@ -35,7 +35,7 @@ By default, the tool creates helpful GitHub Actions workflows to streamline deve
 - **release.yml**:
   Manually triggers (via `workflow_dispatch`) for publishing TypeScript packages.
 - **update-models.yml**:
-  Periodically regenerates all models and opens a pull request with any changes—perfect for remote specs that update often.
+  Periodically (on a cron schedule) regenerates all models and opens a pull request with any changes—perfect for a spec that has changed (usefu for open api docs that are deployed and change on a regular basis.
 
 ## Prerequisites
 

@@ -1,5 +1,3 @@
-
-
 ## Installation
 
 To install dependencies:
@@ -27,4 +25,3 @@ The package is automatically published to NPM when pushing to the main branch. T
 3. release-it creates a new version based on conventional commits
 4. A new GitHub release is created
 5. The package is published to NPM
-

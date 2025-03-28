@@ -1,0 +1,8 @@
+{
+	"recommendations": [
+		"biomejs.biome",
+		"mikestead.dotenv",
+		"tamasfe.even-better-toml",
+		"oven.bun-vscode"
+	]
+}

@@ -7,7 +7,7 @@
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"ignore": ["dist", "node_modules", ".nx", ".git", ".github", ".vscode"]
+		"ignore": ["dist", "node_modules", ".nx", ".git", ".env"]
 	},
 	"formatter": {
 		"enabled": true,
@@ -19,17 +19,7 @@
 	"linter": {
 		"enabled": true,
 		"rules": {
-			"recommended": true,
-			"correctness": {
-				"useImportExtensions": "error",
-				"noUnusedImports": "error",
-				"noUnusedVariables": "error"
-			}
-		}
-	},
-	"json": {
-		"formatter": {
-			"enabled": true
+			"recommended": true
 		}
 	},
 	"javascript": {

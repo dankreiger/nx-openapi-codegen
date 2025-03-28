@@ -39,8 +39,7 @@ By default, the tool creates helpful GitHub Actions workflows to streamline deve
 
 ## Prerequisites
 
-- [Node.js >= 22](https://nodejs.org/en/)
-  (Recommended to manage versions with [nvm](https://github.com/nvm-sh/nvm))
+- [Bun](https://bun.sh/) (>=v1.2 recommended)
 
 ## Usage
 

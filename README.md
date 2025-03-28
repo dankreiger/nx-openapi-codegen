@@ -9,7 +9,7 @@ A CLI tool to generate NX monorepo workspaces with OpenAPI code generation capab
 ## Usage
 
 ```sh
-npx nx-openapi-codegen
+bunx nx-openapi-codegen
 ```
 
 ## Features

@@ -44,7 +44,7 @@ By default, the tool creates helpful GitHub Actions workflows to streamline deve
 ## Usage
 
 ```bash
-npx nx-openapi-codegen
+bunx nx-openapi-codegen
 ```
 
 Follow the interactive prompts to specify your GitHub organization, repository, and OpenAPI spec path (remote or local). **nx-openapi-codegen** will take care of the rest—so you can focus on building applications, not boilerplate.

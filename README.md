@@ -4,12 +4,12 @@ A CLI tool to generate NX monorepo workspaces with OpenAPI code generation capab
 
 ## Prerequisites
 
-- Bun >= 1.2
+- Node >= 22 - you can use [nvm](https://github.com/nvm-sh/nvm) to install and manage Node versions.
 
 ## Usage
 
 ```sh
-bunx nx-openapi-codegen
+npx nx-openapi-codegen
 ```
 
 ## Features
